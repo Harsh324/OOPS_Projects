@@ -1,6 +1,9 @@
 #include<iostream>
 #include<vector>
+#include<fstream>
+
 using namespace std;
+
 class Account
 {
     protected:
@@ -37,11 +40,12 @@ class Checking_Account : protected Account
             else if((Balance - Amount) >= -1 * Credit_limit)
             {
                 Balance = Balance - Amount;
+                cout<<"Credit limit is reaching deposit to maintain normality"<<endl;
                 return true;
             }
             else
             {
-                printf("You have crossed you credit limit . you can not withdraw. credit limit is %lf , while blance is %lf",Credit_limit , Check_balance());
+                cout<<"You have crossed you credit limit . you can not withdraw. credit limit is "<<Credit_limit<<" , while balance is "<<Check_balance()<<endl;
                 return false;
             }
         }
@@ -58,7 +62,8 @@ class Saving_account : protected Account
         }
 };
 
-class Loan : protected Account
+
+class Loan_account : protected Account
 {
     double Principle , Interest_Rate;
     int Loan_duration;
@@ -84,45 +89,62 @@ class Loan : protected Account
     } 
 };
 
-class Interface : protected Account
+
+class admin : protected Account
 {
     int Customer_ID = 0 ;
     string Name , Address , Email , Phone , Account_Type;
     
     public:
-        void Open_Account(string Name , string Address , string Email , string Phone , string Account_type)
+
+        void review()
+        {
+            cout<<"Name : "<<this->Name<<endl;
+            cout<<"Customer ID : "<<this->Customer_ID<<endl;
+            cout<<"Address : "<<this->Address<<endl;
+            cout<<"Email ID : "<<this->Email<<endl;
+            cout<<"Phone no. : "<<this->Phone<<endl;
+            cout<<"Account type : "<<this->Account_Type;
+        }
+        void Open_account(string Name , string Address , string Email , string Phone, string accounttype)
         {
             this->Name = Name;
             this->Address = Address;
             this->Customer_ID = this->Customer_ID + 1;
             this->Phone = Phone;
             this->Email = Email;
-            this->Account_Type = Account_type;
+            this->Account_Type = accounttype;
         }
-            /*
-            cout<<"Enter Full name : ";
-            getline(cin, Name);
-            cout<<"Enter Full address : ";
-            getline(cin, Address);
-            cout<<"Enter Phone No : ";
-            cin>>Phone;
-            cout<<"Enter Email : ";
-            cin>>Email;
-            ID++;
-        }
-        void Out()
-        {
-            
-            cout<<"ID is : "<<ID<<endl;
-            cout<<"Name is : "<<Name<<endl;
-            cout<<"Address is : "<<Address<<endl;
-            cout<<"Mobile no is : "<<Phone<<endl;
-            cout<<"Email is : "<<Email<<endl;
-        }*/
 
+        void Save()
+        {
+            ifstream File("customers.csv");
+            if(!File)
+            {
+                ofstream File("customers.csv");
+                File <<"Customer ID" <<" ; "<< Name <<" ; "<< Address<< " ; "<< Phone <<" ; "<< Email<<endl;
+                File.close();
+                ofstream File("customers.csv",ios::app);
+                File << this->Customer_ID<<" ; "<<this->Name<<" ; "<<this->Address<<" ; "<<this->Phone<<" ; "<<this->Email<<endl;
+                File.close();
+            }
+            else
+            {
+                ofstream File("customers.csv",ios::app);
+                File << this->Customer_ID<<" ; "<<this->Name<<" ; "<<this->Address<<" ; "<<this->Phone<<" ; "<<this->Email<<endl;
+                File.close();
+            }
+            ifstream File1("accounts.csv");
+            if(!File1)
+            {
+                ofstream File1("accounts.csv");
+                File1<<"Account ID" << " ; " << "Customer ID" << " ; " << "Type" << " ; " << "Balance" << " ; "<< "Credit Limit" <<" ; "<<"Interest rate" <<" ; " << "Principal amount" << " ; "<<"Loan duration"<<endl;
+                
+            }
+        }
 };
 
-class Drive
+class Interface
 {
     void Open()
     {
@@ -139,7 +161,7 @@ class Drive
         //
     }
 };
-
+/*
 int main()
 {
     string Name , Address , Phone , Email, Account_type;
@@ -159,6 +181,4 @@ int main()
 
     Var.Open_Account(Name , Address , Email , Phone , Account_type);
     cout<<"\n*******************"<<endl;
-
-
-}
+}*/
