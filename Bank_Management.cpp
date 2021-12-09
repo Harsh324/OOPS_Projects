@@ -1,6 +1,7 @@
 #include<iostream>
 #include<vector>
 #include<fstream>
+#include<string>
 
 using namespace std;
 
@@ -9,6 +10,9 @@ class Account
     protected:
         
         double Balance;
+        int Customer_ID = 0 , Account_ID = 0;
+        string Name , Address , Email , Phone , Account_Type;
+    
         void Deposit(double Amount)
         {
             Balance += Amount;
@@ -28,8 +32,10 @@ class Account
 
 class Checking_Account : protected Account
 {
-    double Credit_limit;
+    
     protected:
+        double Credit_limit;
+
         bool Withdraw(double Amount)
         {
             if((Balance - Amount) >= 0)
@@ -53,8 +59,10 @@ class Checking_Account : protected Account
 
 class Saving_account : protected Account
 {
-    double Interest_rate;
+    
     protected:
+        double Interest_rate;
+
         void Interest_Addition()
         {
             double SI = ( Balance * Interest_rate ) / 1200;
@@ -65,37 +73,40 @@ class Saving_account : protected Account
 
 class Loan_account : protected Account
 {
-    double Principle , Interest_Rate;
-    int Loan_duration;
+    protected:
 
-    double Interest()
-    {
-        double SI = ( Principle * Interest_Rate ) / 1200;
-        return SI;
-    }
+        double Principle , Interest_Rate;
+        int Loan_duration;
 
-    bool Loan_debit()
-    {
-        while(Loan_duration)
+        double Interest()
         {
-            if(Withdraw(Interest()))
-            {
-                Principle = Principle - Interest();
-                return true;
-            }
-            else
-                return false;
+            double SI = ( Principle * Interest_Rate ) / 1200;
+            return SI;
         }
-    } 
+
+        bool Loan_debit()
+        {
+            while(Loan_duration)
+            {
+                if(Withdraw(Interest()))
+                {
+                    Principle = Principle - Interest();
+                    return true;
+                }
+                else
+                    return false;
+            }
+        } 
 };
 
 
-class admin : protected Account
+class admin : protected Loan_account
 {
-    int Customer_ID = 0 ;
-    string Name , Address , Email , Phone , Account_Type;
+    //protected:
+        //int Customer_ID = 0 , Account_ID = 0;
+        //string Name , Address , Email , Phone , Account_Type;
     
-    public:
+    private:
 
         void review()
         {
@@ -138,10 +149,26 @@ class admin : protected Account
             if(!File1)
             {
                 ofstream File1("accounts.csv");
-                File1<<"Account ID" << " ; " << "Customer ID" << " ; " << "Type" << " ; " << "Balance" << " ; "<< "Credit Limit" <<" ; "<<"Interest rate" <<" ; " << "Principal amount" << " ; "<<"Loan duration"<<endl;
-                
+                File1<<"Account ID" << " ; " << "Customer ID" << " ; " << "Type" << " ; " << "Balance" <<" ; " <<"Interest rate" <<" ; " << "Principal amount" << " ; "<<"Loan duration"<<endl;
+                File1.close();
+                ofstream File1("accounts.csv", ios :: app);
+                File1<<this->Account_ID << " ; " << this->Customer_ID << " ; " << this->Account_Type << " ; " << this->Balance <<" ; "<< this->Interest_Rate <<" ; "<<this->Principle <<" ; " << this->Loan_duration <<endl;
+                File1.close();
             }
         }
+};
+
+class Customer : protected Account
+{
+    bool login(string name, string Phone, string type)
+    {
+        ifstream File("customers.txt");
+        string Id, name, address, phone, email;
+        int Flag = 0;
+
+        //while(getline(File, Id, ";"))
+
+    }
 };
 
 class Interface
