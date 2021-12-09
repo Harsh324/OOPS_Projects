@@ -160,14 +160,48 @@ class admin : protected Loan_account
 
 class Customer : protected Account
 {
-    bool login(string name, string Phone, string type)
+    bool login(string name, string Phone, string Type)
     {
-        ifstream File("customers.txt");
-        string Id, name, address, phone, email;
+        ifstream File;
+        File.open("customers.txt");
+        string CID;
+        string Name, address, phone, email;
         int Flag = 0;
 
-        //while(getline(File, Id, ";"))
+        while(getline(File, CID, ';') && Flag == 0)
+        {
+            getline(File, Name, ';');
+            getline(File, address, ';');
+            getline(File, phone, ';');
+            getline(File, email, '\n');
 
+            if(Name == name && phone == Phone)
+            {
+                Flag = 1; 
+                File.close();
+                ifstream File1("accounts.csv");
+                int status = 0;
+                string type, ACid, Var;
+                while(getline(File1, ACid, ';') && status == 0)
+                {
+                    getline(File1, Var, ';');
+                    getline(File1, type, ';');
+                    if(Var == CID && type == Type)
+                    {
+                        status = 1;
+                        File1.close();
+                        return true;
+                    }
+
+                }
+            }
+        }
+        return false;
+    }
+
+    void deposit()
+    {
+        
     }
 };
 
