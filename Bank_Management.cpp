@@ -160,6 +160,7 @@ class admin : protected Loan_account
 
 class Customer : protected Account
 {
+    string accountId;
     bool login(string name, string Phone, string Type)
     {
         ifstream File;
@@ -189,19 +190,36 @@ class Customer : protected Account
                     if(Var == CID && type == Type)
                     {
                         status = 1;
+                        accountId = ACid;
                         File1.close();
                         return true;
                     }
 
                 }
+                cout<<"Account type entered seems not present"<<endl;
             }
         }
         return false;
     }
 
-    void deposit()
+    void deposit(double balance, string Type, string Date)
     {
-        
+        Deposit(balance);
+        ifstream File("accountTransactions.csv");
+        if(!File)
+        {
+            ofstream File("accountTransactions");
+            File << "Account ID" <<";" << "Date" << ";"<< "Transaction Type"<<";" << "Amount"<<endl;
+            File.close();
+            ofstream File("accountTransactions");
+            File <<accountId <<";" << Date << ";" <<"Deposit" <<";" <<balance<<endl;
+            File.close();
+        }
+    }
+
+    void withdraw(double amount , string type , string date)
+    {
+        //
     }
 };
 
