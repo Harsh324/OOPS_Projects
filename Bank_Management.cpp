@@ -2,16 +2,42 @@
 #include<vector>
 #include<fstream>
 #include<string>
+#include<list>
 
 using namespace std;
+
+
+struct customers
+{
+   int Customer_ID;
+   string Name, Address, Phone, Email, Account_type;
+};
+
+struct accounts
+{
+    int Account_ID , Customer_ID;
+    string Type;
+    double Balance , Credit_limit, Interes_rate, Principal_amt;
+    int Loan_duration;
+};
+
+
+struct transactions
+{
+    int Account_ID;
+    string Date, Transaction_type;
+    double Ammount;
+};
+
 
 class Account
 {
     protected:
         
         double Balance;
-        int Customer_ID = 0 , Account_ID = 0;
-        string Name , Address , Email , Phone , Account_Type;
+        list <customers> Customer;
+        list <accounts> Account;
+        list <transactions> Transaction;
     
         void Deposit(double Amount)
         {
@@ -106,56 +132,83 @@ class admin : protected Loan_account
         //int Customer_ID = 0 , Account_ID = 0;
         //string Name , Address , Email , Phone , Account_Type;
     
+    
     private:
 
-        void review()
+        void review(customers Struc, accounts Struc1)
         {
-            cout<<"Name : "<<this->Name<<endl;
-            cout<<"Customer ID : "<<this->Customer_ID<<endl;
-            cout<<"Address : "<<this->Address<<endl;
-            cout<<"Email ID : "<<this->Email<<endl;
-            cout<<"Phone no. : "<<this->Phone<<endl;
-            cout<<"Account type : "<<this->Account_Type;
-        }
-        void Open_account(string Name , string Address , string Email , string Phone, string accounttype)
-        {
-            this->Name = Name;
-            this->Address = Address;
-            this->Customer_ID = this->Customer_ID + 1;
-            this->Phone = Phone;
-            this->Email = Email;
-            this->Account_Type = accounttype;
+            cout<<"Name : "<<Struc.Name<<endl;
+            cout<<"Customer ID : "<<Struc.Customer_ID<<endl;
+            cout<<"Address : "<<Struc.Address<<endl;
+            cout<<"Email ID : "<<Struc.Email<<endl;
+            cout<<"Phone no. : "<<Struc.Phone<<endl;
+            cout<<"Account type : "<<Struc.Account_type;
         }
 
-        void Save()
+        void Open_account(string Name , string Address , string Email , string Phone, string accounttype)
         {
-            ifstream File("customers.csv");
-            if(!File)
-            {
-                ofstream File("customers.csv");
-                File <<"Customer ID" <<" ; "<< Name <<" ; "<< Address<< " ; "<< Phone <<" ; "<< Email<<endl;
-                File.close();
-                ofstream File("customers.csv",ios::app);
-                File << this->Customer_ID<<" ; "<<this->Name<<" ; "<<this->Address<<" ; "<<this->Phone<<" ; "<<this->Email<<endl;
-                File.close();
-            }
-            else
-            {
-                ofstream File("customers.csv",ios::app);
-                File << this->Customer_ID<<" ; "<<this->Name<<" ; "<<this->Address<<" ; "<<this->Phone<<" ; "<<this->Email<<endl;
-                File.close();
-            }
-            ifstream File1("accounts.csv");
-            if(!File1)
-            {
-                ofstream File1("accounts.csv");
-                File1<<"Account ID" << " ; " << "Customer ID" << " ; " << "Type" << " ; " << "Balance" <<" ; " <<"Interest rate" <<" ; " << "Principal amount" << " ; "<<"Loan duration"<<endl;
-                File1.close();
-                ofstream File1("accounts.csv", ios :: app);
-                File1<<this->Account_ID << " ; " << this->Customer_ID << " ; " << this->Account_Type << " ; " << this->Balance <<" ; "<< this->Interest_Rate <<" ; "<<this->Principle <<" ; " << this->Loan_duration <<endl;
-                File1.close();
-            }
+            customers Struc1;
+            Struc1.Name = Name;
+            Struc1.Address = Address;
+            Struc1.Email = Email;
+            Struc1.Phone = Phone;
+            Struc1.Account_type = accounttype;
         }
+
+        void Save(customers Struc)
+        {
+            Customer.push_back(Struc);
+
+        }
+        
+        // void review()
+        // {
+        //     cout<<"Name : "<<this->Name<<endl;
+        //     cout<<"Customer ID : "<<this->Customer_ID<<endl;
+        //     cout<<"Address : "<<this->Address<<endl;
+        //     cout<<"Email ID : "<<this->Email<<endl;
+        //     cout<<"Phone no. : "<<this->Phone<<endl;
+        //     cout<<"Account type : "<<this->Account_Type;
+        // }
+        // void Open_account(string Name , string Address , string Email , string Phone, string accounttype)
+        // {
+        //     this->Name = Name;
+        //     this->Address = Address;
+        //     this->Customer_ID = this->Customer_ID + 1;
+        //     this->Phone = Phone;
+        //     this->Email = Email;
+        //     this->Account_Type = accounttype;
+        // }
+
+        // void Save()
+        // {
+        //     ifstream File("customers.csv");
+        //     if(!File)
+        //     {
+        //         ofstream File("customers.csv");
+        //         File <<"Customer ID" <<" ; "<< Name <<" ; "<< Address<< " ; "<< Phone <<" ; "<< Email<<endl;
+        //         File.close();
+        //         ofstream File("customers.csv",ios::app);
+        //         File << this->Customer_ID<<" ; "<<this->Name<<" ; "<<this->Address<<" ; "<<this->Phone<<" ; "<<this->Email<<endl;
+        //         File.close();
+        //     }
+        //     else
+        //     {
+        //         ofstream File("customers.csv",ios::app);
+        //         File << this->Customer_ID<<" ; "<<this->Name<<" ; "<<this->Address<<" ; "<<this->Phone<<" ; "<<this->Email<<endl;
+        //         File.close();
+        //     }
+        //     ifstream File1("accounts.csv");
+        //     if(!File1)
+        //     {
+        //         ofstream File1("accounts.csv");
+        //         File1<<"Account ID" << " ; " << "Customer ID" << " ; " << "Type" << " ; " << "Balance" <<" ; " <<"Interest rate" <<" ; " << "Principal amount" << " ; "<<"Loan duration"<<endl;
+        //         File1.close();
+        //         ofstream File1("accounts.csv", ios :: app);
+        //         File1<<this->Account_ID << " ; " << this->Customer_ID << " ; " << this->Account_Type << " ; " << this->Balance <<" ; "<< this->Interest_Rate <<" ; "<<this->Principle <<" ; " << this->Loan_duration <<endl;
+        //         File1.close();
+        //     }
+        // }
 };
 
 class Customer : protected Account
@@ -168,7 +221,6 @@ class Customer : protected Account
         string CID;
         string Name, address, phone, email;
         int Flag = 0;
-
         while(getline(File, CID, ';') && Flag == 0)
         {
             getline(File, Name, ';');
