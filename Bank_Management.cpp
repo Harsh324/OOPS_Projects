@@ -10,7 +10,7 @@ using namespace std;
 struct customers
 {
    int Customer_ID;
-   string Name, Address, Phone, Email, Account_type;
+   string Name, Address, Phone, Email;
 };
 
 struct accounts
@@ -138,27 +138,43 @@ class admin : protected Loan_account
         void review(customers Struc, accounts Struc1)
         {
             cout<<"Name : "<<Struc.Name<<endl;
-            cout<<"Customer ID : "<<Struc.Customer_ID<<endl;
+            //cout<<"Customer ID : "<<Struc.Customer_ID<<endl;
             cout<<"Address : "<<Struc.Address<<endl;
             cout<<"Email ID : "<<Struc.Email<<endl;
             cout<<"Phone no. : "<<Struc.Phone<<endl;
-            cout<<"Account type : "<<Struc.Account_type;
         }
 
-        void Open_account(string Name , string Address , string Email , string Phone, string accounttype)
+        void New_Customer(customers Struct)
         {
-            customers Struc1;
-            Struc1.Name = Name;
-            Struc1.Address = Address;
-            Struc1.Email = Email;
-            Struc1.Phone = Phone;
-            Struc1.Account_type = accounttype;
+            for(auto i : Customer)
+            {
+                if(i.Name == Struct.Name && i.Phone == Struct.Phone && i.Email == Struct.Email)
+                {
+                    cout<<"User is already registerd"<<endl;
+                    return;
+                }
+            }
+            Struct.Customer_ID = Customer.size();
+            Customer.push_back(Struct);
+        }
+        void Open_account(accounts Struct, int Customer_id)
+        {
+            for(auto i : Account)
+            {
+                if(i.Customer_ID == Customer_id && i.Type == Struct.Type)
+                {
+                    cout<<"account of this type is already opened"<<endl;
+                    return;
+                }
+            }
+            Struct.Customer_ID = Customer_id;
+            Struct.Account_ID = Account.size();
+            Account.push_back(Struct);
         }
 
         void Save(customers Struc)
         {
             Customer.push_back(Struc);
-
         }
         
         // void review()
@@ -214,8 +230,16 @@ class admin : protected Loan_account
 class Customer : protected Account
 {
     string accountId;
-    bool login(string name, string Phone, string Type)
+    bool login(int Customer_id, int Account_id)
     {
+        for(auto i : Account)
+        {
+            if(i.Customer_ID == Customer_id && i.Account_ID == Account_id)
+                return false;
+        }
+        return true;
+
+        /*
         ifstream File;
         File.open("customers.txt");
         string CID;
@@ -251,11 +275,37 @@ class Customer : protected Account
                 cout<<"Account type entered seems not present"<<endl;
             }
         }
-        return false;
+        return false;*/
     }
 
-    void deposit(double balance, string Type, string Date)
+    void deposit(int Customer_id, int Account_id, double Amt, string Type)
     {
+        accounts Struc1;
+        for(auto i : Account)
+        {
+            if(i.Account_ID == Account_id && i.Customer_ID == Customer_id)
+            {
+                if(i.Type == Type)
+                {
+                    //Deposit(Amt);
+                    i.Balance = Check_balance() + Amt;
+                    i.Interes_rate = 5.0;
+                    i.Loan_duration = 0.0;
+                    i.Credit_limit = 0.0;
+                    i.Principal_amt = Check_balance() + Amt;
+
+                    transactions Struc;
+                    Struc.Account_ID = Account_id;
+                    Struc.Transaction_type = "Deposit";
+                    Struc.Ammount = Amt;
+                    Struc.Date = "13/12/2021";
+
+                    Transaction.push_back(Struc);
+                    return ;
+                }
+            }
+        }
+        /*
         Deposit(balance);
         ifstream File("accountTransactions.csv");
         if(!File)
@@ -266,12 +316,25 @@ class Customer : protected Account
             ofstream File("accountTransactions");
             File <<accountId <<";" << Date << ";" <<"Deposit" <<";" <<balance<<endl;
             File.close();
-        }
+        }*/
     }
 
-    void withdraw(double amount , string type , string date)
+    void withdraw(int Customer_id, int Account_id, double Amt, string Type)
     {
-        //
+        accounts Struc1;
+        for(auto i : Account)
+        {
+            if(i.Account_ID == Account_id && i.Customer_ID == Customer_id)
+            {
+                if(i.Type == Type)
+                {
+                    if(Withdraw(Amt))
+                    {
+                        
+                    }
+                }
+            }
+        }
     }
 };
 
