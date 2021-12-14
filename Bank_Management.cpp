@@ -46,7 +46,13 @@ class Account
 
         bool Withdraw(double Amount)
         {
-            return true;
+            if(Amount > Balance)
+            {
+                Balance -= Amount;
+                return true;
+            }
+            cout<<"Balance is insufficient"<<endl;
+            return false;
         }
 
         double Check_balance()
@@ -133,12 +139,12 @@ class admin : protected Loan_account
         //string Name , Address , Email , Phone , Account_Type;
     
     
-    private:
+    protected:
 
-        void review(customers Struc, accounts Struc1)
+        void review(customers Struc)
         {
+            cout<<"Customer ID : "<<Struc.Customer_ID<<endl;
             cout<<"Name : "<<Struc.Name<<endl;
-            //cout<<"Customer ID : "<<Struc.Customer_ID<<endl;
             cout<<"Address : "<<Struc.Address<<endl;
             cout<<"Email ID : "<<Struc.Email<<endl;
             cout<<"Phone no. : "<<Struc.Phone<<endl;
@@ -155,7 +161,7 @@ class admin : protected Loan_account
                 }
             }
             Struct.Customer_ID = Customer.size();
-            Customer.push_back(Struct);
+            //Customer.push_back(Struct);
         }
         void Open_account(accounts Struct, int Customer_id)
         {
@@ -167,7 +173,7 @@ class admin : protected Loan_account
                     return;
                 }
             }
-            Struct.Customer_ID = Customer_id;
+            //Struct.Customer_ID = Customer_id;
             Struct.Account_ID = Account.size();
             Account.push_back(Struct);
         }
@@ -175,6 +181,20 @@ class admin : protected Loan_account
         void Save(customers Struc)
         {
             Customer.push_back(Struc);
+        }
+
+        void Get_All()
+        {
+            cout<<"Outputing all customers "<<endl;
+            for(auto i : Customer)
+            {
+                cout<<"*****************"<<endl;
+                cout<<"ID : "<<i.Customer_ID<<endl;
+                cout<<"Name : "<<i.Name<<endl;
+                cout<<"Address : "<<i.Address<<endl;
+                cout<<"Phone : "<<i.Phone<<endl;
+                cout<<"Email : "<<i.Email<<endl;
+            }
         }
         
         // void review()
@@ -336,43 +356,90 @@ class Customer : protected Account
             }
         }
     }
+
+    double Balance_enquiry(int Customer_id, int Account_id, string Type)
+    {
+        for(auto i : Account)
+        {
+            if(i.Account_ID == Account_id && i.Customer_ID == Customer_id && i.Type == Type)
+            {
+                return i.Balance;
+            }
+        }
+        cout<<"Some error occured"<<endl;
+        return 0.0;
+    }
 };
 
-class Interface
+class Interface : protected admin, protected Customer
 {
-    void Open()
-    {
-        //
-    }
+    public:
+        void Main()
+        {
+            int Num;
+            cout<<"Enter 1 if you are admin\nEnter 2 if you are Customer"<<endl;
+            cin>>Num;
+            if(Num == 1)
+            {
+                cout<<"You are admin."<<endl;
+                cout<<"You can register new customer"<<endl;
+                cout<<"You can open account"<<endl;
+                int Val= 0;
+                customers Struc;
+                accounts Struc1;
+                while(Val != 6)
+                {
+                    cout<<"Enter 1 to register new user\nEnter 2 to review data\nEnter 3 to save record\nEnter 4 to open Account\nEnter 5 to get all customers\nEnter 6 to end process"<<endl;
+                    cin>>Val;
+                    switch(Val)
+                    {
+                        case 1:
+                            cout<<"Enter Full name : ";
+                            getline(cin>>ws, Struc.Name);
+                            cout<<"Enter Full address : ";
+                            getline(cin, Struc.Address);
+                            cout<<"Enter Phone No : ";
+                            cin>>Struc.Phone;
+                            cout<<"Enter Email : ";
+                            cin>>Struc.Email;
+                            New_Customer(Struc);
+                            break;
+                        
+                        case 2:
+                            cout<<"****************************"<<endl;
+                            cout<<"Review the details again"<<endl;
+                            review(Struc);
+                            break;
+                        
+                        case 3:
+                            cout<<"****************************"<<endl;
+                            cout<<"Saving the details."<<endl;
+                            Save(Struc);
+                            break;
 
-    void Over_view()
-    {
-        //
-    }
-
-    void Save()
-    {
-        //
-    }
+                        case 4:
+                            cout<<"****************************"<<endl;
+                            int Custom_ID;
+                            cout<<"Enter Customer ID : ";
+                            cin>>Custom_ID;
+                            cout<<"Enter account Type: ";
+                            cin>>Struc1.Type;
+                            Struc1.Customer_ID = Custom_ID;
+                            Open_account(Struc1, Custom_ID);
+                            break;
+                        
+                        case 5:
+                            cout<<"****************************"<<endl;
+                            cout<<"Ending the process"<<endl;
+                    }
+                }
+            }
+        }
 };
-/*
+
 int main()
 {
-    string Name , Address , Phone , Email, Account_type;
-    Interface Var = Interface();
-    Interface Var1 = Interface();
-    cout<<"Enter Full name : ";
-    getline(cin, Name);
-    cout<<"Enter Full address : ";
-    getline(cin, Address);
-    cout<<"Enter Phone No : ";
-    cin>>Phone;
-    cout<<"Enter Email : ";
-    cin>>Email;
-    cout<<"Enter Acount type : Loan or Shaving : ";
-    cin>>Account_type;
-
-
-    Var.Open_Account(Name , Address , Email , Phone , Account_type);
-    cout<<"\n*******************"<<endl;
-}*/
+    Interface Obj = Interface();
+    Obj.Main();
+    return 0;
+}
