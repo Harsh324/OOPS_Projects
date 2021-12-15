@@ -21,14 +21,12 @@ struct accounts
     int Loan_duration;
 };
 
-
 struct transactions
 {
     int Account_ID;
     string Date, Transaction_type;
     double Ammount;
 };
-
 
 class Account
 {
@@ -102,7 +100,6 @@ class Saving_account : protected Account
         }
 };
 
-
 class Loan_account : protected Account
 {
     protected:
@@ -143,24 +140,24 @@ class admin : protected Loan_account
 
         void review(customers Struc)
         {
-            cout<<"Customer ID : "<<Struc.Customer_ID<<endl;
+            //cout<<"Customer ID : "<<Struc.Customer_ID<<endl;
             cout<<"Name : "<<Struc.Name<<endl;
             cout<<"Address : "<<Struc.Address<<endl;
             cout<<"Email ID : "<<Struc.Email<<endl;
             cout<<"Phone no. : "<<Struc.Phone<<endl;
         }
 
-        void New_Customer(customers Struct)
+        void New_Customer(customers *Struct)
         {
             for(auto i : Customer)
             {
-                if(i.Name == Struct.Name && i.Phone == Struct.Phone && i.Email == Struct.Email)
+                if(i.Name == Struct->Name && i.Phone == Struct->Phone && i.Email == Struct->Email)
                 {
                     cout<<"User is already registerd"<<endl;
                     return;
                 }
             }
-            Struct.Customer_ID = Customer.size();
+            Struct->Customer_ID = Customer.size() + 1;
             //Customer.push_back(Struct);
         }
         void Open_account(accounts Struct, int Customer_id)
@@ -174,13 +171,19 @@ class admin : protected Loan_account
                 }
             }
             //Struct.Customer_ID = Customer_id;
-            Struct.Account_ID = Account.size();
+            Struct.Account_ID = Account.size() + 1;
             Account.push_back(Struct);
         }
 
         void Save(customers Struc)
         {
             Customer.push_back(Struc);
+            /*int Num = 1;
+            for(auto i : Customer)
+            {
+                i.Customer_ID = Num;
+                Num++;
+            }*/
         }
 
         void Get_All()
@@ -188,7 +191,7 @@ class admin : protected Loan_account
             cout<<"Outputing all customers "<<endl;
             for(auto i : Customer)
             {
-                cout<<"*****************"<<endl;
+                cout<<"\n*****************\n"<<endl;
                 cout<<"ID : "<<i.Customer_ID<<endl;
                 cout<<"Name : "<<i.Name<<endl;
                 cout<<"Address : "<<i.Address<<endl;
@@ -196,55 +199,52 @@ class admin : protected Loan_account
                 cout<<"Email : "<<i.Email<<endl;
             }
         }
-        
-        // void review()
-        // {
-        //     cout<<"Name : "<<this->Name<<endl;
-        //     cout<<"Customer ID : "<<this->Customer_ID<<endl;
-        //     cout<<"Address : "<<this->Address<<endl;
-        //     cout<<"Email ID : "<<this->Email<<endl;
-        //     cout<<"Phone no. : "<<this->Phone<<endl;
-        //     cout<<"Account type : "<<this->Account_Type;
-        // }
-        // void Open_account(string Name , string Address , string Email , string Phone, string accounttype)
-        // {
-        //     this->Name = Name;
-        //     this->Address = Address;
-        //     this->Customer_ID = this->Customer_ID + 1;
-        //     this->Phone = Phone;
-        //     this->Email = Email;
-        //     this->Account_Type = accounttype;
-        // }
 
-        // void Save()
-        // {
-        //     ifstream File("customers.csv");
-        //     if(!File)
-        //     {
-        //         ofstream File("customers.csv");
-        //         File <<"Customer ID" <<" ; "<< Name <<" ; "<< Address<< " ; "<< Phone <<" ; "<< Email<<endl;
-        //         File.close();
-        //         ofstream File("customers.csv",ios::app);
-        //         File << this->Customer_ID<<" ; "<<this->Name<<" ; "<<this->Address<<" ; "<<this->Phone<<" ; "<<this->Email<<endl;
-        //         File.close();
-        //     }
-        //     else
-        //     {
-        //         ofstream File("customers.csv",ios::app);
-        //         File << this->Customer_ID<<" ; "<<this->Name<<" ; "<<this->Address<<" ; "<<this->Phone<<" ; "<<this->Email<<endl;
-        //         File.close();
-        //     }
-        //     ifstream File1("accounts.csv");
-        //     if(!File1)
-        //     {
-        //         ofstream File1("accounts.csv");
-        //         File1<<"Account ID" << " ; " << "Customer ID" << " ; " << "Type" << " ; " << "Balance" <<" ; " <<"Interest rate" <<" ; " << "Principal amount" << " ; "<<"Loan duration"<<endl;
-        //         File1.close();
-        //         ofstream File1("accounts.csv", ios :: app);
-        //         File1<<this->Account_ID << " ; " << this->Customer_ID << " ; " << this->Account_Type << " ; " << this->Balance <<" ; "<< this->Interest_Rate <<" ; "<<this->Principle <<" ; " << this->Loan_duration <<endl;
-        //         File1.close();
-        //     }
-        // }
+        void update_database()
+        {
+            ofstream Customer_file("customers.csv");
+            ofstream Account_file("accounts.csv");
+            ofstream Transaction_file("transactions.csv");
+
+            //ofstream File("customers.csv");
+            // Customer
+            Customer_file <<"Customer ID" <<" ; "<< "Name" <<" ; "<< "Address" << " ; "<< "Phone" <<" ; "<< "Email"<<endl;
+            for(auto i : Customer)
+            {
+                Customer_file <<i.Customer_ID<<" ; "<<i.Name<<" ; "<<i.Address<<" ; "<<i.Phone<<" ; "<<i.Email<<endl;
+            }
+            Customer_file.close();
+
+            // Account
+            Account_file <<"Account ID" << " ; " << "Customer ID" << " ; " << "Type" << " ; " << "Balance" <<" ; " <<"Interest rate" <<" ; " << "Credit Limit" << " ; " << "Principal amount" << " ; "<<"Loan duration"<<endl;
+            for(auto i : Account)
+            {
+                Account_file<<i.Account_ID << " ; " << i.Customer_ID << " ; " << i.Type << " ; " << i.Balance <<" ; "<< i.Interes_rate <<" ; " << i.Credit_limit <<" ; "<<i.Principal_amt <<" ; " << i.Loan_duration <<endl;
+            }
+            Account_file.close();
+
+            // Transaction
+            Transaction_file <<"Account_ID" <<" ; " << "Date" <<" ; " <<"Transaction type" << " ; " <<"Ammount"<<endl;
+            for(auto i : Transaction)
+            {
+                Transaction_file<<i.Account_ID<<" ; "<<i.Ammount<<" ; "<<i.Transaction_type <<" ; "<<i.Ammount<<endl;
+            }
+            Transaction_file.close();
+            /*
+            if(!Customer_file)
+            {
+                ofstream File("customers.csv");
+                File <<"Customer ID" <<" ; "<< Name <<" ; "<< Address<< " ; "<< Phone <<" ; "<< Email<<endl;
+                File.close();
+
+                ofstream File("customers.csv",ios::app);
+                File << this->Customer_ID<<" ; "<<this->Name<<" ; "<<this->Address<<" ; "<<this->Phone<<" ; "<<this->Email<<endl;
+                File.close();
+            }*/
+
+
+
+        }
 };
 
 class Customer : protected Account
@@ -258,44 +258,6 @@ class Customer : protected Account
                 return false;
         }
         return true;
-
-        /*
-        ifstream File;
-        File.open("customers.txt");
-        string CID;
-        string Name, address, phone, email;
-        int Flag = 0;
-        while(getline(File, CID, ';') && Flag == 0)
-        {
-            getline(File, Name, ';');
-            getline(File, address, ';');
-            getline(File, phone, ';');
-            getline(File, email, '\n');
-
-            if(Name == name && phone == Phone)
-            {
-                Flag = 1; 
-                File.close();
-                ifstream File1("accounts.csv");
-                int status = 0;
-                string type, ACid, Var;
-                while(getline(File1, ACid, ';') && status == 0)
-                {
-                    getline(File1, Var, ';');
-                    getline(File1, type, ';');
-                    if(Var == CID && type == Type)
-                    {
-                        status = 1;
-                        accountId = ACid;
-                        File1.close();
-                        return true;
-                    }
-
-                }
-                cout<<"Account type entered seems not present"<<endl;
-            }
-        }
-        return false;*/
     }
 
     void deposit(int Customer_id, int Account_id, double Amt, string Type)
@@ -325,18 +287,6 @@ class Customer : protected Account
                 }
             }
         }
-        /*
-        Deposit(balance);
-        ifstream File("accountTransactions.csv");
-        if(!File)
-        {
-            ofstream File("accountTransactions");
-            File << "Account ID" <<";" << "Date" << ";"<< "Transaction Type"<<";" << "Amount"<<endl;
-            File.close();
-            ofstream File("accountTransactions");
-            File <<accountId <<";" << Date << ";" <<"Deposit" <<";" <<balance<<endl;
-            File.close();
-        }*/
     }
 
     void withdraw(int Customer_id, int Account_id, double Amt, string Type)
@@ -371,6 +321,7 @@ class Customer : protected Account
     }
 };
 
+
 class Interface : protected admin, protected Customer
 {
     public:
@@ -381,7 +332,7 @@ class Interface : protected admin, protected Customer
             cin>>Num;
             if(Num == 1)
             {
-                cout<<"You are admin."<<endl;
+                cout<<"\nYou are admin."<<endl;
                 cout<<"You can register new customer"<<endl;
                 cout<<"You can open account"<<endl;
                 int Val= 0;
@@ -389,6 +340,7 @@ class Interface : protected admin, protected Customer
                 accounts Struc1;
                 while(Val != 6)
                 {
+                    cout<<"\n"<<endl;
                     cout<<"Enter 1 to register new user\nEnter 2 to review data\nEnter 3 to save record\nEnter 4 to open Account\nEnter 5 to get all customers\nEnter 6 to end process"<<endl;
                     cin>>Val;
                     switch(Val)
@@ -402,23 +354,23 @@ class Interface : protected admin, protected Customer
                             cin>>Struc.Phone;
                             cout<<"Enter Email : ";
                             cin>>Struc.Email;
-                            New_Customer(Struc);
+                            New_Customer(&Struc);
                             break;
                         
                         case 2:
-                            cout<<"****************************"<<endl;
+                            cout<<"****************************\n"<<endl;
                             cout<<"Review the details again"<<endl;
                             review(Struc);
                             break;
                         
                         case 3:
-                            cout<<"****************************"<<endl;
+                            cout<<"****************************\n"<<endl;
                             cout<<"Saving the details."<<endl;
                             Save(Struc);
                             break;
 
                         case 4:
-                            cout<<"****************************"<<endl;
+                            cout<<"****************************\n"<<endl;
                             int Custom_ID;
                             cout<<"Enter Customer ID : ";
                             cin>>Custom_ID;
@@ -429,8 +381,17 @@ class Interface : protected admin, protected Customer
                             break;
                         
                         case 5:
-                            cout<<"****************************"<<endl;
+                            cout<<"****************************\n"<<endl;
+                            //cout<<"Outputtinh all data\n";
+                            Get_All();
+                            break;
+
+                        
+                        case 6:
+                            update_database();
+                            cout<<"****************************\n"<<endl;
                             cout<<"Ending the process"<<endl;
+                            break;
                     }
                 }
             }
