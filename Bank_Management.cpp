@@ -6,7 +6,6 @@
 
 using namespace std;
 
-
 struct customers
 {
    int Customer_ID;
@@ -28,15 +27,31 @@ struct transactions
     double Ammount;
 };
 
+list <customers> to_customer_List(ifstream &infile);
+list <accounts> to_account_List(ifstream &infile);
+list <transactions> to_transactions_List(ifstream &infile);
+
 class Account
 {
-    protected:
-        
-        double Balance;
-        list <customers> Customer;
-        list <accounts> Account;
-        list <transactions> Transaction;
     
+    protected:
+
+        double Balance;
+
+        list <customers> Customer;
+        list <accounts> account;
+        list <transactions> Transaction;
+        
+        Account()
+        {
+            ifstream infile("customers.csv");
+            ifstream infile1("accounts.csv");
+            ifstream infile2("transactions.csv");
+            Customer = to_customer_List(infile);
+            account = to_account_List(infile1);
+            Transaction = to_transactions_List(infile2);
+            Balance = 0.0;
+        }
         void Deposit(double Amount)
         {
             Balance += Amount;
@@ -57,7 +72,6 @@ class Account
         {
             return Balance;
         }
-
 };
 
 class Checking_Account : protected Account
@@ -131,22 +145,17 @@ class Loan_account : protected Account
 
 class admin : protected Loan_account
 {
-    //protected:
-        //int Customer_ID = 0 , Account_ID = 0;
-        //string Name , Address , Email , Phone , Account_Type;
-    
-    
     protected:
-
+        // Review the details
         void review(customers Struc)
         {
-            //cout<<"Customer ID : "<<Struc.Customer_ID<<endl;
             cout<<"Name : "<<Struc.Name<<endl;
             cout<<"Address : "<<Struc.Address<<endl;
             cout<<"Email ID : "<<Struc.Email<<endl;
             cout<<"Phone no. : "<<Struc.Phone<<endl;
         }
 
+        // Add new customer
         void New_Customer(customers *Struct)
         {
             for(auto i : Customer)
@@ -158,11 +167,12 @@ class admin : protected Loan_account
                 }
             }
             Struct->Customer_ID = Customer.size() + 1;
-            //Customer.push_back(Struct);
         }
+
+        // Open account
         void Open_account(accounts Struct, int Customer_id)
         {
-            for(auto i : Account)
+            for(auto i : account)
             {
                 if(i.Customer_ID == Customer_id && i.Type == Struct.Type)
                 {
@@ -170,22 +180,17 @@ class admin : protected Loan_account
                     return;
                 }
             }
-            //Struct.Customer_ID = Customer_id;
-            Struct.Account_ID = Account.size() + 1;
-            Account.push_back(Struct);
+            Struct.Account_ID = account.size() + 1;
+            account.push_back(Struct);
         }
-
+        
+        // Saving the details
         void Save(customers Struc)
         {
             Customer.push_back(Struc);
-            /*int Num = 1;
-            for(auto i : Customer)
-            {
-                i.Customer_ID = Num;
-                Num++;
-            }*/
         }
 
+        // Printing all the customer details
         void Get_All()
         {
             cout<<"Outputing all customers "<<endl;
@@ -200,26 +205,131 @@ class admin : protected Loan_account
             }
         }
 
+        // Outputtinh the list data t files
         void update_database()
         {
             ofstream Customer_file("customers.csv");
             ofstream Account_file("accounts.csv");
             ofstream Transaction_file("transactions.csv");
 
-            //ofstream File("customers.csv");
-            // Customer
             Customer_file <<"Customer ID" <<" ; "<< "Name" <<" ; "<< "Address" << " ; "<< "Phone" <<" ; "<< "Email"<<endl;
             for(auto i : Customer)
             {
-                Customer_file <<i.Customer_ID<<" ; "<<i.Name<<" ; "<<i.Address<<" ; "<<i.Phone<<" ; "<<i.Email<<endl;
+                Customer_file <<i.Customer_ID<<";"<<i.Name<<";"<<i.Address<<";"<<i.Phone<<";"<<i.Email<<endl;
             }
             Customer_file.close();
 
             // Account
             Account_file <<"Account ID" << " ; " << "Customer ID" << " ; " << "Type" << " ; " << "Balance" <<" ; " <<"Interest rate" <<" ; " << "Credit Limit" << " ; " << "Principal amount" << " ; "<<"Loan duration"<<endl;
-            for(auto i : Account)
+            for(auto i : account)
             {
-                Account_file<<i.Account_ID << " ; " << i.Customer_ID << " ; " << i.Type << " ; " << i.Balance <<" ; "<< i.Interes_rate <<" ; " << i.Credit_limit <<" ; "<<i.Principal_amt <<" ; " << i.Loan_duration <<endl;
+                Account_file<<i.Account_ID << ";" << i.Customer_ID << ";" << i.Type << ";" << i.Balance <<";"<< i.Interes_rate <<";" << i.Credit_limit <<";"<<i.Principal_amt <<";" << i.Loan_duration <<endl;
+            }
+            Account_file.close();
+        }
+};
+
+class Customer : protected Account
+{
+    protected:
+
+        // Customer login by customer id and account id
+        accounts login(int Customer_id, int Account_id)
+        {
+            accounts Struc;
+            for(auto &i : account)
+            {
+                if(i.Customer_ID == Customer_id && i.Account_ID == Account_id)
+                {
+                    Struc = i;
+                    break;
+                }
+            }
+            return Struc;
+        }
+
+        // Depositing money
+        void deposit(transactions Struc, accounts *Struc1)
+        {
+            for(auto &i : account)
+            {
+                if(i.Account_ID == Struc1->Account_ID && i.Customer_ID == Struc1->Customer_ID)
+                {
+                    if(i.Type == Struc1->Type)
+                    {
+                        Deposit(Struc.Ammount);
+                        Struc1->Balance = Check_balance() + Struc.Ammount;
+                        Struc1->Interes_rate = 5.0;
+                        Struc1->Loan_duration = 0.0;
+                        Struc1->Principal_amt = Check_balance() + Struc.Ammount;
+                        Struc1->Loan_duration = 0;
+                        i = *Struc1;
+
+                        Transaction.push_back(Struc);
+                    }
+                }
+            }
+        }
+
+        // withdrawing the money
+        void withdraw(accounts *Struct, transactions Struct1)
+        {
+            for(auto &i : account)
+            {
+                if(i.Account_ID == Struct->Account_ID && i.Customer_ID == Struct->Customer_ID)
+                {
+                    Withdraw(Struct1.Ammount);
+                    cout<<"Withdrawn ! Current balance is "<<Check_balance()<<endl;
+                    Struct->Balance = Check_balance();
+                    Struct->Principal_amt = Check_balance();
+                    i = *Struct;
+
+                    Transaction.push_back(Struct1);
+                }
+            }
+        }
+        
+        // Chaeking balance
+        void Balance_enquiry(accounts Struct)
+        {
+            for(auto i : account)
+            {
+                if(i.Account_ID == Struct.Account_ID && i.Customer_ID == Struct.Customer_ID)
+                {
+                    cout<<"Balance is : "<<i.Balance<<endl;
+                }
+            }
+        }
+
+        // Get all account details
+        void GetAll()
+        {
+            cout<<"Outputing all customers "<<endl;
+            for(auto i : account)
+            {
+                cout<<"\n*****************\n"<<endl;
+                cout<<"Account ID : "<<i.Account_ID<<endl;
+                cout<<"Balance : "<<i.Balance<<endl;
+                cout<<"Customer ID : "<<i.Customer_ID<<endl;
+                cout<<"Credit limit : "<<i.Credit_limit<<endl;
+                cout<<"Interest limit : "<<i.Interes_rate<<endl;
+                cout<<"Loan duration : "<<i.Loan_duration<<endl;
+                cout<<"Principal Amount : "<<i.Principal_amt<<endl;
+                cout<<"Type : "<<i.Type<<endl;
+
+            }
+        }
+
+        // Saving all list data to files
+        void update()
+        {
+            ofstream Account_file("accounts.csv");
+            ofstream Transaction_file("transactions.csv");
+            Account_file <<"Account ID" << " ; " << "Customer ID" << " ; " << "Type" << " ; " << "Balance" <<" ; " <<"Interest rate" <<" ; " << "Credit Limit" << " ; " << "Principal amount" << " ; "<<"Loan duration"<<endl;
+            for(auto i : account)
+            {
+                cout<<"Num\n";
+                Account_file<<i.Account_ID << ";" << i.Customer_ID << ";" << i.Type << ";" << i.Balance <<";"<< i.Interes_rate <<";" << i.Credit_limit <<";"<<i.Principal_amt <<";" << i.Loan_duration <<endl;
             }
             Account_file.close();
 
@@ -227,98 +337,10 @@ class admin : protected Loan_account
             Transaction_file <<"Account_ID" <<" ; " << "Date" <<" ; " <<"Transaction type" << " ; " <<"Ammount"<<endl;
             for(auto i : Transaction)
             {
-                Transaction_file<<i.Account_ID<<" ; "<<i.Ammount<<" ; "<<i.Transaction_type <<" ; "<<i.Ammount<<endl;
+                Transaction_file<<i.Account_ID<<";"<<i.Ammount<<";"<<i.Transaction_type <<";"<<i.Ammount<<endl;
             }
             Transaction_file.close();
-            /*
-            if(!Customer_file)
-            {
-                ofstream File("customers.csv");
-                File <<"Customer ID" <<" ; "<< Name <<" ; "<< Address<< " ; "<< Phone <<" ; "<< Email<<endl;
-                File.close();
-
-                ofstream File("customers.csv",ios::app);
-                File << this->Customer_ID<<" ; "<<this->Name<<" ; "<<this->Address<<" ; "<<this->Phone<<" ; "<<this->Email<<endl;
-                File.close();
-            }*/
-
-
-
         }
-};
-
-class Customer : protected Account
-{
-    string accountId;
-    bool login(int Customer_id, int Account_id)
-    {
-        for(auto i : Account)
-        {
-            if(i.Customer_ID == Customer_id && i.Account_ID == Account_id)
-                return false;
-        }
-        return true;
-    }
-
-    void deposit(int Customer_id, int Account_id, double Amt, string Type)
-    {
-        accounts Struc1;
-        for(auto i : Account)
-        {
-            if(i.Account_ID == Account_id && i.Customer_ID == Customer_id)
-            {
-                if(i.Type == Type)
-                {
-                    //Deposit(Amt);
-                    i.Balance = Check_balance() + Amt;
-                    i.Interes_rate = 5.0;
-                    i.Loan_duration = 0.0;
-                    i.Credit_limit = 0.0;
-                    i.Principal_amt = Check_balance() + Amt;
-
-                    transactions Struc;
-                    Struc.Account_ID = Account_id;
-                    Struc.Transaction_type = "Deposit";
-                    Struc.Ammount = Amt;
-                    Struc.Date = "13/12/2021";
-
-                    Transaction.push_back(Struc);
-                    return ;
-                }
-            }
-        }
-    }
-
-    void withdraw(int Customer_id, int Account_id, double Amt, string Type)
-    {
-        accounts Struc1;
-        for(auto i : Account)
-        {
-            if(i.Account_ID == Account_id && i.Customer_ID == Customer_id)
-            {
-                if(i.Type == Type)
-                {
-                    if(Withdraw(Amt))
-                    {
-                        
-                    }
-                }
-            }
-        }
-    }
-
-    double Balance_enquiry(int Customer_id, int Account_id, string Type)
-    {
-        for(auto i : Account)
-        {
-            if(i.Account_ID == Account_id && i.Customer_ID == Customer_id && i.Type == Type)
-            {
-                return i.Balance;
-            }
-        }
-        cout<<"Some error occured"<<endl;
-        return 0.0;
-    }
 };
 
 
@@ -359,7 +381,7 @@ class Interface : protected admin, protected Customer
                         
                         case 2:
                             cout<<"****************************\n"<<endl;
-                            cout<<"Review the details again"<<endl;
+                            cout<<"Review the details again\n"<<endl;
                             review(Struc);
                             break;
                         
@@ -377,18 +399,80 @@ class Interface : protected admin, protected Customer
                             cout<<"Enter account Type: ";
                             cin>>Struc1.Type;
                             Struc1.Customer_ID = Custom_ID;
+                            Struc1.Balance = 0.0;
+                            Struc1.Credit_limit = 0.0;
+                            Struc1.Interes_rate = 0.0;
+                            Struc1.Loan_duration = 0;
+                            Struc1.Principal_amt = 0.0;
                             Open_account(Struc1, Custom_ID);
                             break;
                         
                         case 5:
                             cout<<"****************************\n"<<endl;
-                            //cout<<"Outputtinh all data\n";
                             Get_All();
                             break;
 
-                        
                         case 6:
                             update_database();
+                            cout<<"****************************\n"<<endl;
+                            cout<<"Ending the process"<<endl;
+                            break;
+                    }
+                }
+            }
+            else if(Num == 2)
+            {
+                transactions TStruct;
+                accounts AStruct;
+                int Cus_Id, Acc_id;
+                cout<<"Enter the Customer ID"<<endl;
+                cin>>Cus_Id;
+                cout<<"Enter the Account ID"<<endl;
+                cin>>Acc_id;
+                AStruct = login(Cus_Id, Acc_id);
+
+                cout<<"\nYou are customer."<<endl;
+                cout<<"you can deposit, Withdraw."<<endl;
+                cout<<"you can check balance also."<<endl;
+
+                TStruct.Account_ID = Acc_id;
+        
+                int Val = 0;
+                double Amt;
+                string Type;
+                while(Val != 5)
+                {
+                    cout<<"\n"<<endl;
+                    cout<<"Enter 1 to deposit\nEnter 2 to Withdraw\nEnter 3 to check Balance\nEnter 4 to get all account records\nEnter 5 to end procces"<<endl;
+                    cin>>Val;
+                    switch(Val)
+                    {
+                        case 1:
+                            cout<<"\nEnter the Amount to deposit\n"<<endl;
+                            cin>>Amt;
+                            TStruct.Ammount = Amt;
+                            TStruct.Transaction_type = "Deposit";
+                            TStruct.Date = "16/12/2021";
+                            deposit(TStruct, &AStruct);
+                            break;
+
+                        case 2:
+                            cout<<"\nEnter the Amount to withdraw\n"<<endl;
+                            cin>>Amt;
+                            TStruct.Ammount = Amt;
+                            TStruct.Transaction_type = "Withdrawl";
+                            withdraw(&AStruct, TStruct);
+                            break;
+                        
+                        case 3:
+                            Balance_enquiry(AStruct);
+                            break;
+                        case 4:
+                            GetAll();
+                            break;
+
+                        case 5:
+                            update();
                             cout<<"****************************\n"<<endl;
                             cout<<"Ending the process"<<endl;
                             break;
@@ -403,4 +487,91 @@ int main()
     Interface Obj = Interface();
     Obj.Main();
     return 0;
+}
+
+
+
+
+list <customers> to_customer_List(ifstream &infile)
+{
+    string Customer_ID;
+    string Name, Address, Phone, Email, endline;
+    list <customers> Custom;
+    
+    while (infile.peek() != EOF)
+    {
+        customers Struc;
+        getline(infile>>ws, Customer_ID, ';');
+        getline(infile>>ws, Name, ';');
+        getline(infile>>ws, Address, ';');
+        getline(infile>>ws, Phone, ';');
+        getline(infile>>ws, Email, '\n');
+        
+        Struc.Customer_ID = atoi(Customer_ID.c_str());
+        Struc.Name = Name;
+        Struc.Phone = Phone;
+        Struc.Email = Email;
+        Struc.Address = Address;
+        if(Struc.Customer_ID == 0)
+            continue;
+        Custom.push_back(Struc);
+    }
+    return Custom;
+}
+
+list <accounts> to_account_List(ifstream &infile)
+{
+    string Account_ID , Customer_ID, Type, Loan_duration;
+    string Balance , Credit_limit, Interes_rate, Principal_amt;
+    list <accounts> account;
+    while(infile.peek() != EOF)
+    {
+        accounts Struc;
+        getline(infile>>ws, Account_ID, ';');
+        getline(infile>>ws, Customer_ID, ';');
+        getline(infile>>ws, Type, ';');
+        getline(infile>>ws, Balance, ';');
+        getline(infile>>ws, Interes_rate, ';');
+        getline(infile>>ws, Credit_limit, ';');
+        getline(infile>>ws, Principal_amt, ';');
+        getline(infile>>ws, Loan_duration, '\n');
+        
+        Struc.Account_ID = atoi(Account_ID.c_str());
+        Struc.Customer_ID = atoi(Customer_ID.c_str());
+        Struc.Balance = atof(Balance.c_str());
+        Struc.Type = Type;
+        Struc.Interes_rate = atof(Interes_rate.c_str());
+        Struc.Credit_limit = atof(Credit_limit.c_str());
+        Struc.Principal_amt = atof(Principal_amt.c_str());
+        Struc.Loan_duration = atof(Loan_duration.c_str());
+        if(Struc.Account_ID == 0 && Struc.Customer_ID == 0 )
+        {
+            continue;
+        }
+        account.push_back(Struc);
+    }
+    return account;
+}
+
+list <transactions> to_transactions_List(ifstream &infile)
+{
+    string Account_ID, Date, Transaction_type, Ammount;
+    list <transactions> Custom;
+    while(infile.peek() != EOF)
+    {
+        getline(infile, Account_ID, ';');
+        getline(infile, Date, ';');
+        getline(infile, Transaction_type, ';');
+        getline(infile, Ammount, '\n');
+
+        transactions Struc;
+        Struc.Account_ID = atoi(Account_ID.c_str());
+        Struc.Ammount = atof(Ammount.c_str());
+        Struc.Date = Date;
+        Struc.Transaction_type = Transaction_type;
+        if(Struc.Account_ID == 0)
+            continue;
+        Custom.push_back(Struc);
+    }
+    return Custom;
 }
