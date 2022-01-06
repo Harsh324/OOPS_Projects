@@ -1,3 +1,4 @@
 Account ID ; Customer ID ; Type ; Balance ; Interest rate ; Credit Limit ; Principal amount ; Loan duration
 1;1;Saving;1000;5;0;1000;0
 2;2;Saving;601;5;0;601;0
+3;5;Saving;0;0;0;0;0

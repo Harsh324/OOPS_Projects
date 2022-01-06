@@ -6,12 +6,15 @@
 
 using namespace std;
 
+
+// customers 
 struct customers
 {
    int Customer_ID;
    string Name, Address, Phone, Email;
 };
 
+// accounts
 struct accounts
 {
     int Account_ID , Customer_ID;
@@ -20,6 +23,7 @@ struct accounts
     int Loan_duration;
 };
 
+// transactions
 struct transactions
 {
     int Account_ID;
@@ -27,10 +31,17 @@ struct transactions
     double Ammount;
 };
 
+// linked list to get all customer details from database at the start of program. 
 list <customers> to_customer_List(ifstream &infile);
+
+// linked list to get all account details from database at the start of program. 
 list <accounts> to_account_List(ifstream &infile);
+
+// linked list to get all transactions details from database at the start of program. 
 list <transactions> to_transactions_List(ifstream &infile);
 
+
+// Account class
 class Account
 {
     
@@ -74,6 +85,7 @@ class Account
         }
 };
 
+// Checking account class
 class Checking_Account : protected Account
 {
     
@@ -101,6 +113,7 @@ class Checking_Account : protected Account
         }
 };
 
+// Saving Account class
 class Saving_account : protected Account
 {
     
@@ -114,6 +127,7 @@ class Saving_account : protected Account
         }
 };
 
+// Loan Account class
 class Loan_account : protected Account
 {
     protected:
@@ -142,7 +156,7 @@ class Loan_account : protected Account
         } 
 };
 
-
+// admin account class
 class admin : protected Loan_account
 {
     protected:
@@ -205,7 +219,7 @@ class admin : protected Loan_account
             }
         }
 
-        // Outputtinh the list data t files
+        // updating database
         void update_database()
         {
             ofstream Customer_file("customers.csv");
@@ -229,6 +243,7 @@ class admin : protected Loan_account
         }
 };
 
+// Customer account class
 class Customer : protected Account
 {
     protected:
@@ -377,6 +392,11 @@ class Interface : protected admin, protected Customer
                             cout<<"Enter Email : ";
                             cin>>Struc.Email;
                             New_Customer(&Struc);
+                            int Num;
+                            
+                            cout<<"****************************\n"<<endl;
+                            cout<<"Review the details again\n"<<endl;
+                            review(Struc);
                             break;
                         
                         case 2:
@@ -481,6 +501,8 @@ class Interface : protected admin, protected Customer
             }
         }
 };
+
+
 
 int main()
 {
