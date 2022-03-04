@@ -106,28 +106,39 @@ class SavingAccount extends Account
 
 class loanAccount extends Account
 {
-    
+    private double Principal_amt;
+    private float Interest_Rate1;
+    private int Month;
+
+
     public loanAccount(String name, String Phone, String Email, String Address)
     {
         super(name, Phone, Email, Address);
     }
 
     @Override
-    void deposit(double D) {
-        // TODO Auto-generated method stub
+    void deposit(double D) 
+    {
+        Principal_amt -= D;
         
     }
 
     @Override
-    void withdraw(double W) {
-        // TODO Auto-generated method stub
+    void withdraw(double W) 
+    {
+        Principal_amt += W;
         
     }
 
     @Override
-    double balanceEnquiry() {
-        // TODO Auto-generated method stub
-        return 0;
+    double balanceEnquiry() 
+    {
+        return Principal_amt;
     }
 
+    public void Interest_Addition()
+    {
+        double Interest = (Principal_amt) * (Interest_Rate1);
+        Principal_amt += Interest;
+    }
 }
