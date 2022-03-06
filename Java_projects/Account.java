@@ -1,5 +1,7 @@
 package Java_projects;
 
+import java.util.*;
+
 /**
  * Abstract class acting as base class
  */
@@ -9,15 +11,37 @@ abstract class Account
     private String Phone;
     private String Email;
     private String Address;
+    private String Account_Type;
 
     protected double Balance;
 
-    public Account(String name, String Phone, String Email, String Address)
+    public Account(String name, String Phone, String Email, String Address, String Account_Type)
     {
         this.Name = name;
         this.Phone = Phone;
         this.Email = Email;
         this.Address = Address;
+        this.Account_Type = Account_Type;
+    }
+
+    public String get_Name()
+    {
+        return this.Name;
+    }
+
+    public String get_Phone()
+    {
+        return this.Phone;
+    }
+
+    public String get_Email()
+    {
+        return this.Email;
+    }
+
+    public String get_Address()
+    {
+        return this.Address;
     }
 
     abstract void deposit(double D);
@@ -34,9 +58,9 @@ class CheckingAccount extends Account
     private double creditlimit;
     private double Balance1;
 
-    public CheckingAccount(String name, String Phone, String Email, String Address)
+    public CheckingAccount(String name, String Phone, String Email, String Address, String Account_Type)
     {
-        super(name, Phone, Email, Address);
+        super(name, Phone, Email, Address, Account_Type);
     }
 
     @Override
@@ -67,9 +91,9 @@ class SavingAccount extends Account
 {
     private double saving_Balance;
     private double Interest_Rate;
-    public SavingAccount(String name, String Phone, String Email, String Address)
+    public SavingAccount(String name, String Phone, String Email, String Address, String Account_Type)
     {
-        super(name, Phone, Email, Address);
+        super(name, Phone, Email, Address, Account_Type);
     }
 
     @Override
@@ -111,9 +135,9 @@ class loanAccount extends Account
     private int Month;
 
 
-    public loanAccount(String name, String Phone, String Email, String Address)
+    public loanAccount(String name, String Phone, String Email, String Address, String Account_Type)
     {
-        super(name, Phone, Email, Address);
+        super(name, Phone, Email, Address, Account_Type);
     }
 
     @Override
