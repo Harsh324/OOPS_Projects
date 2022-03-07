@@ -17,10 +17,12 @@ class Bank
     {
         for(Account Acc : Account_List)
         {
+            
             System.out.println("Name : " + Acc.get_Name());
             System.out.println("Phone : " + Acc.get_Phone());
             System.out.println("Email : " + Acc.get_Email());
             System.out.println("Address : " + Acc.get_Address());
+            System.out.println("Account Type : "+ Acc.get_AccountType());
         }
     }
 
@@ -70,20 +72,19 @@ class Admin extends Bank
 
     public void Open_Account()
     {
-        Bank B = new Bank();
         if(this.AccountType == "Saving")
         {
-            B.Add_Account(new SavingAccount(this.Name, this.Phone, this.Email, this.Address, this.AccountType));
+            super.Add_Account(new SavingAccount(this.Name, this.Phone, this.Email, this.Address, this.AccountType));
             System.out.println("New Account is opened");
         }
         else if(this.AccountType == "Checking")
         {
-            B.Add_Account(new CheckingAccount(this.Name, this.Phone, this.Email, this.Address, this.AccountType));
+            super.Add_Account(new CheckingAccount(this.Name, this.Phone, this.Email, this.Address, this.AccountType));
             System.out.println("New Account is opened");
         }
         else if(this.AccountType == "Loan")
         {
-            B.Add_Account(new loanAccount(this.Name, this.Phone, this.Email, this.Address, this.AccountType));
+            super.Add_Account(new loanAccount(this.Name, this.Phone, this.Email, this.Address, this.AccountType));
             System.out.println("New Account is opened");
         }
         else

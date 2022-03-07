@@ -44,6 +44,11 @@ abstract class Account
         return this.Address;
     }
 
+    public String get_AccountType()
+    {
+        return this.Account_Type;
+    }
+
     abstract void deposit(double D);
     abstract void withdraw(double W);
     abstract double balanceEnquiry();
