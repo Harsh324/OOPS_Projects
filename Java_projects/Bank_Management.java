@@ -34,18 +34,27 @@ public class Bank_Management{
         // }
 
 
-        String Path = "Java_projects/DataBase/Customers/Details/Text.csv";
-        try (BufferedReader br = new BufferedReader(new FileReader(Path))) {
+        String Path = "Java_projects/DataBase/Customers/Details/";
+        List<Object> Result = new ArrayList<>();
+        //String Path = "Java_projects/DataBase/Customers/Transactions/";
+        File folder = new File(Path);
+        File[] listOfFiles = folder.listFiles();
+        for(File file : listOfFiles)
+        {
+            try (BufferedReader br = new BufferedReader(new FileReader(file))) 
+            {
 
-            List<List<String>> result = new ArrayList<>();
-            String line;
-            while ((line = br.readLine()) != null) {
-                String[] values = line.split(";");
-                result.add(Arrays.asList(values));
+                List<List<String>> result = new ArrayList<>();
+                String line;
+                while ((line = br.readLine()) != null) {
+                    String[] values = line.split(";");
+                    result.add(Arrays.asList(values));
+                }
+                Result.add(result);
+                //System.out.println(result);
             }
-
-            System.out.println(result);
         }
+        System.out.println(Result);
     }
 }
 
