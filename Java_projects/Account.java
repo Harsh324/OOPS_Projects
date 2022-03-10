@@ -24,6 +24,11 @@ abstract class Account
         this.Account_Type = Account_Type;
     }
 
+    public Account(String Account_Type)
+    {
+        this.Account_Type = Account_Type;
+    }
+
     public String get_Name()
     {
         return this.Name;
@@ -68,6 +73,11 @@ class CheckingAccount extends Account
         super(name, Phone, Email, Address, Account_Type);
     }
 
+    public CheckingAccount(String Account_Type)
+    {
+        super(Account_Type);
+    }
+
     @Override
     void deposit(double D) 
     {
@@ -96,9 +106,16 @@ class SavingAccount extends Account
 {
     private double saving_Balance;
     private double Interest_Rate;
+
+
     public SavingAccount(String name, String Phone, String Email, String Address, String Account_Type)
     {
         super(name, Phone, Email, Address, Account_Type);
+    }
+
+    public SavingAccount(String Account_Type)
+    {
+        super(Account_Type);
     }
 
     @Override
@@ -143,6 +160,11 @@ class loanAccount extends Account
     public loanAccount(String name, String Phone, String Email, String Address, String Account_Type)
     {
         super(name, Phone, Email, Address, Account_Type);
+    }
+
+    public loanAccount(String Account_Type)
+    {
+        super(Account_Type);
     }
 
     @Override
