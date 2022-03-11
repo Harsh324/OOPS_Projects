@@ -127,10 +127,13 @@ class Admin extends Bank
             System.out.println("Please Enter correct Account Type, among ('Saving', 'Checking', 'Loan')");
     }
 
-    public void Print_Few_Transactions() throws FileNotFoundException, IOException
+    public void Print_Transaction_Details() throws FileNotFoundException, IOException
     {
+        System.out.println("Enter Customer ID");
+        String Customer_ID = sc.next();
+
         List<Object> Lst = new ArrayList<>();
-        Lst = Adm.Get_Transactions();
+        Lst = Adm.Get_Transactions(Customer_ID);
         System.out.println("Printing Few Transactions");
         for(Object Ls : Lst)
         {
@@ -175,10 +178,8 @@ class Customer extends Bank
     private String Customer_ID;
     //private String Account_type;
 
-
-    void Login() 
+    public void Deposit_Money()
     {
-        // TODO Auto-generated method stub
-        
+        Account A = Account.get_Account(Type_Account.Saving);
     }
 }
