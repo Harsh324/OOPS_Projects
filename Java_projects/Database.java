@@ -169,17 +169,14 @@ class Database
         return Result;
     }*/
 
-    public List Get_Transactions() throws FileNotFoundException, IOException
+    public List Get_Transactions(String Customer_ID) throws FileNotFoundException, IOException
     {
         List<Object> Result = new ArrayList<>();
-        String Path = "Java_projects/DataBase/Customers/Accounts/";
+        String Path = "Java_projects/DataBase/Customers/" + Customer_ID + "/";
         File folder = new File(Path);
         File[] listOfFiles = folder.listFiles();
-        int Count = 0;
         for(File file : listOfFiles)
         {
-            if(Count == 5)
-                break;
             try (BufferedReader br = new BufferedReader(new FileReader(file))) 
             {
 
@@ -192,7 +189,6 @@ class Database
                 //Result.add(result);
                 //System.out.println(result);
             }
-            Count++;
         }
         
         return Result;
@@ -209,7 +205,7 @@ class Database
 
     public List Return_Details(String Customer_id) throws IOException
     {
-        String Path = "Java_projects/DataBase/Customers/Details/" + Customer_id + ".csv";
+        String Path = "Java_projects/DataBase/Customers/" + Customer_id + "/Details/" + Customer_id + ".csv";
         try (BufferedReader br = new BufferedReader(new FileReader(Path))) {
 
             List<List<String>> result = new ArrayList<>();
@@ -223,7 +219,7 @@ class Database
         }
     }
 
-    public void Return_Account(String Account_ID){};
+    //public void Return_Account(String Account_ID){};
 
 
     public List Return_Accounts(String Customer_ID) throws FileNotFoundException, IOException
@@ -251,8 +247,9 @@ class Database
         return Result;
     }
 
-    public void Return_Transaction(String Account_ID){};
+    //public void Return_Transaction(String Account_ID){};
 
+    /*
     public List Return_Transactions() throws FileNotFoundException, IOException
     {
         List<Object> Result = new ArrayList<>();
@@ -276,5 +273,5 @@ class Database
         }
         
         return Result;
-    }
+    }*/
 }
