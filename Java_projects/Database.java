@@ -3,22 +3,22 @@ import java.util.*;
 import java.io.*;
 
 
-class Database 
-{
-    protected List<Object> Details  = new ArrayList<Object>();
-    protected List<Object> Accounts  = new ArrayList<Object>();
-    protected List<Object> Transactions  = new ArrayList<Object>();
 
-    
 
-}
-
-class Admin_Database
+class Database
 {
 
-    public void Add_Details(String Detail) throws FileNotFoundException, IOException
+    public String get_Customer_ID()
     {
-        String Path = "Java_projects/DataBase/Customers/Details/";
+        String Val = "";
+        return Val;
+    }
+
+
+    public void Add_Details(Account A) throws FileNotFoundException, IOException
+    {
+        String Detail = "";
+        String Path;
 
 
         List<String> Lst = new ArrayList<>();
@@ -59,8 +59,11 @@ class Admin_Database
 
     }
 
-    public void Add_Account(String Acc_Details, String Customer_ID, String Account_Type) throws IOException
+    public void Add_Account(Account A) throws IOException
     {
+        String Acc_Details = "";
+        String Customer_ID = "";
+        String Account_Type = "";
         String Path = "Java_projects/DataBase/Customers/" + Customer_ID + "/Accounts/";
         
         List<String> Lst = new ArrayList<>();
@@ -140,6 +143,7 @@ class Admin_Database
         }
     }
 
+    /*
     public List Get_Accounts() throws FileNotFoundException, IOException
     {
         List<Object> Result = new ArrayList<>();
@@ -163,12 +167,12 @@ class Admin_Database
         }
         
         return Result;
-    }
+    }*/
 
-    public List Get_Transactions() throws FileNotFoundException, IOException
+    public List Get_Transactions(String Customer_ID) throws FileNotFoundException, IOException
     {
         List<Object> Result = new ArrayList<>();
-        String Path = "Java_projects/DataBase/Customers/Accounts/";
+        String Path = "Java_projects/DataBase/Customers/" + Customer_ID + "/";
         File folder = new File(Path);
         File[] listOfFiles = folder.listFiles();
         for(File file : listOfFiles)
@@ -176,7 +180,7 @@ class Admin_Database
             try (BufferedReader br = new BufferedReader(new FileReader(file))) 
             {
 
-                List<List<String>> result = new ArrayList<>();
+                //List<List<String>> result = new ArrayList<>();
                 String line;
                 while ((line = br.readLine()) != null) {
                     String[] values = line.split(";");
@@ -189,27 +193,19 @@ class Admin_Database
         
         return Result;
     }
-}
 
+    //private String Customer_id, password;
 
-
-
-
-
-class Customer_Database
-{
-    private String Customer_id, password;
-
-
+    /*
     public void Customer_Login(String Customer_ID, String Password)
     {
         this.Customer_id = Customer_ID;
         this.password = Password;
-    }
+    }*/
 
-    public List Return_Details() throws IOException
+    public List Return_Details(String Customer_id) throws IOException
     {
-        String Path = "Java_projects/DataBase/Customers/Details/" + this.Customer_id + ".csv";
+        String Path = "Java_projects/DataBase/Customers/" + Customer_id + "/Details/" + Customer_id + ".csv";
         try (BufferedReader br = new BufferedReader(new FileReader(Path))) {
 
             List<List<String>> result = new ArrayList<>();
@@ -223,13 +219,13 @@ class Customer_Database
         }
     }
 
-    public void Return_Account(String Account_ID){};
+    //public void Return_Account(String Account_ID){};
 
 
-    public List Return_Accounts() throws FileNotFoundException, IOException
+    public List Return_Accounts(String Customer_ID) throws FileNotFoundException, IOException
     {
         List<Object> Result = new ArrayList<>();
-        String Path = "Java_projects/DataBase/Customers/Accounts/";
+        String Path = "Java_projects/DataBase/Customers/" + Customer_ID + "/Accounts/";
         File folder = new File(Path);
         File[] listOfFiles = folder.listFiles();
         for(File file : listOfFiles)
@@ -251,8 +247,9 @@ class Customer_Database
         return Result;
     }
 
-    public void Return_Transaction(String Account_ID){};
+    //public void Return_Transaction(String Account_ID){};
 
+    /*
     public List Return_Transactions() throws FileNotFoundException, IOException
     {
         List<Object> Result = new ArrayList<>();
@@ -276,5 +273,5 @@ class Customer_Database
         }
         
         return Result;
-    }
+    }*/
 }

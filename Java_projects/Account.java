@@ -2,11 +2,17 @@ package Java_projects;
 
 import java.util.*;
 
+enum Type_Account
+{
+    Saving, Checking, Loan
+}
+
 /**
  * Abstract class acting as base class
  */
 abstract class Account 
 {
+    private static SavingAccount _sav = new SavingAccount("ee");
     private String Name;
     private String Phone;
     private String Email;
@@ -22,6 +28,16 @@ abstract class Account
         this.Email = Email;
         this.Address = Address;
         this.Account_Type = Account_Type;
+    }
+
+    public Account(String Account_Type)
+    {
+        this.Account_Type = Account_Type;
+    }
+
+    public Account()
+    {
+        this.Name = "";
     }
 
     public String get_Name()
@@ -53,6 +69,17 @@ abstract class Account
     abstract void withdraw(double W);
     abstract double balanceEnquiry();
 
+    static Account get_Account(Type_Account Acc)
+    {
+        Account account = null;
+        switch(Acc)
+        {
+            case Saving:
+                account = _sav;
+        }
+        return account;
+    }
+
 }
 
 /**
@@ -66,6 +93,11 @@ class CheckingAccount extends Account
     public CheckingAccount(String name, String Phone, String Email, String Address, String Account_Type)
     {
         super(name, Phone, Email, Address, Account_Type);
+    }
+
+    public CheckingAccount(String Account_Type)
+    {
+        super(Account_Type);
     }
 
     @Override
@@ -96,9 +128,16 @@ class SavingAccount extends Account
 {
     private double saving_Balance;
     private double Interest_Rate;
+
+
     public SavingAccount(String name, String Phone, String Email, String Address, String Account_Type)
     {
         super(name, Phone, Email, Address, Account_Type);
+    }
+
+    public SavingAccount(String Account_Type)
+    {
+        super(Account_Type);
     }
 
     @Override
@@ -143,6 +182,11 @@ class loanAccount extends Account
     public loanAccount(String name, String Phone, String Email, String Address, String Account_Type)
     {
         super(name, Phone, Email, Address, Account_Type);
+    }
+
+    public loanAccount(String Account_Type)
+    {
+        super(Account_Type);
     }
 
     @Override
