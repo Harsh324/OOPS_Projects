@@ -24,7 +24,7 @@ class Interface
                 {
                     System.out.println(
                         "\nEnter 1 to open Account\nEnter 2 to get All Account Details\nEnter 3 to Print Customer details\n"
-                        + "Enter 4 to print Account Details\nEnter 5 to print Transaction Details : "
+                        + "Enter 4 to print Transaction Details : "
                         );
                     Num = sc.nextInt();
                     if(Num == 1)
@@ -60,14 +60,25 @@ class Interface
                         System.out.println("\nPrinting all the details\n");
                         Adm.Print_Account_Details();
                     }
+
+                    else if(Num == 3)
+                    {
+                        System.out.println("\nPrinting Customer Details");
+                        Adm.Print_Customer_Details();
+                    }
+
+                    else if(Num == 4)
+                    {
+                        System.out.println("\nPrinting Transaction details");
+                        Adm.Print_Transaction_Details();
+                    }
                 }
                 
             }
             else if(Num == 2)
             {
                 Customer Cstm = new Customer();
-                Cstm.Login();
-                Account Ac;
+                
                 
             }
         }

@@ -2,11 +2,17 @@ package Java_projects;
 
 import java.util.*;
 
+enum Type_Account
+{
+    Saving, Checking, Loan
+}
+
 /**
  * Abstract class acting as base class
  */
 abstract class Account 
 {
+    private static SavingAccount _sav = new SavingAccount("ee");
     private String Name;
     private String Phone;
     private String Email;
@@ -27,6 +33,11 @@ abstract class Account
     public Account(String Account_Type)
     {
         this.Account_Type = Account_Type;
+    }
+
+    public Account()
+    {
+        this.Name = "";
     }
 
     public String get_Name()
@@ -57,6 +68,17 @@ abstract class Account
     abstract void deposit(double D);
     abstract void withdraw(double W);
     abstract double balanceEnquiry();
+
+    static Account get_Account(Type_Account Acc)
+    {
+        Account account = null;
+        switch(Acc)
+        {
+            case Saving:
+                account = _sav;
+        }
+        return account;
+    }
 
 }
 
