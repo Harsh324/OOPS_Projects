@@ -16,7 +16,7 @@ class Database
 
     public void Add_Details(Account A) throws FileNotFoundException, IOException
     {
-        String Detail = "Customer Details are to be Added; need to be";
+        String Detail = "Customer Details are to be Added; need to be Added";
         String Path;
 
 
@@ -52,10 +52,12 @@ class Database
 
         BufferedWriter out = new BufferedWriter(new FileWriter(Path, true));
         out.write(Str1);
+        out.newLine();
         out.write(Detail);
+        out.newLine();
         out.close();
 
-
+        this.Customer_Count = Integer.toString(Integer.parseInt(this.Customer_Count) + 1);
     }
 
     public void Add_Account(Account A) throws IOException
@@ -78,27 +80,41 @@ class Database
 
         BufferedWriter out = new BufferedWriter(new FileWriter(Path, true));
         out.write(Str1);
+        out.newLine();
         out.write(Acc_Details);
         out.close();
+
+        
 
         if(Account_Type == "Saving")
         {
             String Path5 = "Java_projects/DataBase/Accounts/Saving_Accounts.csv";
-            BufferedWriter out1 = new BufferedWriter(new FileWriter(Path, true));
+            BufferedWriter out1 = new BufferedWriter(new FileWriter(Path5, true));
+            out1.newLine();
             out1.write(Acc_Details);
+            //out1.newLine();
+            out1.close();
         }
         else if(Account_Type == "Loan")
         {
             String Path5 = "Java_projects/DataBase/Accounts/Saving_Accounts.csv";
-            BufferedWriter out1 = new BufferedWriter(new FileWriter(Path, true));
+            BufferedWriter out1 = new BufferedWriter(new FileWriter(Path5, true));
+            out1.newLine();
             out1.write(Acc_Details);
+            //out1.newLine();
+            out1.close();
         }
         else if(Account_Type == "Checking")
         {
             String Path5 = "Java_projects/DataBase/Accounts/Saving_Accounts.csv";
-            BufferedWriter out1 = new BufferedWriter(new FileWriter(Path, true));
+            BufferedWriter out1 = new BufferedWriter(new FileWriter(Path5, true));
+            out1.newLine();
             out1.write(Acc_Details);
+            //out1.newLine();
+            out1.close();
         }
+
+        this.Account_Count = Integer.toString(Integer.parseInt(this.Account_Count) + 1);
         
     }
 
@@ -122,9 +138,23 @@ class Database
 
         BufferedWriter out = new BufferedWriter(new FileWriter(Path, true));
         out.write(Str1);
+        out.newLine();
         out.write(Trans_Details);
         out.close();
 
+        this.Transaction_Count = Integer.toString(Integer.parseInt(this.Transaction_Count) + 1);
+
+    }
+
+    public void Put_metadata() throws IOException
+    {
+        String Str1 = "Customer_ID; Account_ID; Transaction_ID";
+        String Path = "Java_projects/DataBase/Metadata/metadata.csv";
+        BufferedWriter out = new BufferedWriter(new FileWriter(Path));
+        out.write(Str1);
+        out.newLine();
+        out.write(this.Customer_Count + ";" + this.Account_Count + ";" + this.Transaction_Count);
+        out.close();
     }
 
     public void Get_metadata()
