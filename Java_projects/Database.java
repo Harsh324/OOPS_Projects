@@ -16,7 +16,7 @@ class Database
 
     public void Add_Details(Account A) throws FileNotFoundException, IOException
     {
-        String Detail = "";
+        String Detail = "Customer Details are to be Added; need to be";
         String Path;
 
 
@@ -44,7 +44,7 @@ class Database
         
         
         
-        Path = Path2 + "2022_CM_" + this.Customer_Count + ".csv";
+        Path = Path2 + "/" + "2022_CM_" + this.Customer_Count + ".csv";
         File file = new File(Path);
         file.createNewFile();
 
@@ -60,17 +60,17 @@ class Database
 
     public void Add_Account(Account A) throws IOException
     {
-        String Acc_Details = "";
+        String Acc_Details = "Account Details are to be added ; Seems not added till";
         String Customer_ID = "";
-        String Account_Type = "";
-        String Path = "Java_projects/DataBase/Customers/" + Customer_ID + "/Accounts/";
+        String Account_Type = "Saving";
+        String Path = "Java_projects/DataBase/Customers/" + "2022_CM_" + this.Customer_Count+ "/Accounts/";
         
         /*List<String> Lst = new ArrayList<>();
         Lst = Get_metadata();
         //Updating Customer ID
         String Str = Lst.get(1);*/
         
-        Path = Path + "2022_AC_" + this.Customer_Count + ".csv";
+        Path = Path + "2022_AC_" + this.Account_Count + ".csv";
         File file = new File(Path);
         file.createNewFile();
 
