@@ -2,42 +2,22 @@ package Java_projects;
 
 import java.util.*;
 
-enum Type_Account
-{
-    Saving, Checking, Loan
-}
-
 /**
  * Abstract class acting as base class
  */
 abstract class Account 
 {
-    private static SavingAccount _sav = new SavingAccount("ee");
-    private String Name;
-    private String Phone;
-    private String Email;
-    private String Address;
-    private String Account_Type;
-
+    private String Name, Phone, Email, Address, Account_Type;
     protected double Balance;
 
-    public Account(String name, String Phone, String Email, String Address, String Account_Type)
+    public Account(String name, String Phone, String Email, String Address, String Account_Type, Double Balance)
     {
         this.Name = name;
         this.Phone = Phone;
         this.Email = Email;
         this.Address = Address;
         this.Account_Type = Account_Type;
-    }
-
-    public Account(String Account_Type)
-    {
-        this.Account_Type = Account_Type;
-    }
-
-    public Account()
-    {
-        this.Name = "";
+        this.Balance = Balance;
     }
 
     public String get_Name()
@@ -69,17 +49,6 @@ abstract class Account
     abstract void withdraw(double W);
     abstract double balanceEnquiry();
 
-    static Account get_Account(Type_Account Acc)
-    {
-        Account account = null;
-        switch(Acc)
-        {
-            case Saving:
-                account = _sav;
-        }
-        return account;
-    }
-
 }
 
 /**
@@ -88,122 +57,99 @@ abstract class Account
 class CheckingAccount extends Account
 {
     private double creditlimit;
-    private double Balance1;
 
-    public CheckingAccount(String name, String Phone, String Email, String Address, String Account_Type)
+    public CheckingAccount(String name, String Phone, String Email, String Address, String Account_Type, Double Balance, Double Creditlimit)
     {
-        super(name, Phone, Email, Address, Account_Type);
+        super(name, Phone, Email, Address, Account_Type, Balance);
+        this.creditlimit = Creditlimit;
     }
 
-    public CheckingAccount(String Account_Type)
-    {
-        super(Account_Type);
-    }
-
-    @Override
     void deposit(double D) 
     {
-        Balance1++;
+        Balance++;
     }
 
-    @Override
     void withdraw(double W)
     {
-        if(Balance1 - W >= creditlimit)
+        if(Balance - W >= creditlimit)
         {
-            Balance1 -= W;
+            Balance -= W;
         } 
         else
             System.out.println("Can't Initiate Withdrawl ! , Credit limit reached");
     }
 
-    @Override
     double balanceEnquiry()
     {
-        return Balance1;
+        return Balance;
     }
 }
 
 class SavingAccount extends Account
 {
-    private double saving_Balance;
-    private double Interest_Rate;
+    private double Saving_Interest_Rate;
 
 
-    public SavingAccount(String name, String Phone, String Email, String Address, String Account_Type)
+    public SavingAccount(String name, String Phone, String Email, String Address, String Account_Type, double Balance, double Saving_Interest_Rate)
     {
-        super(name, Phone, Email, Address, Account_Type);
+        super(name, Phone, Email, Address, Account_Type, Balance);
+        this.Saving_Interest_Rate = Saving_Interest_Rate;
     }
 
-    public SavingAccount(String Account_Type)
-    {
-        super(Account_Type);
-    }
-
-    @Override
     void deposit(double D) 
     {
-        saving_Balance += D;
+        Balance += D;
         
     }
 
-    @Override
     void withdraw(double W)
     {
-        if(saving_Balance - W >= 0)
+        if(Balance - W >= 0)
         {
-            saving_Balance -= W;
+            Balance -= W;
         }
         else
             System.out.println("Can't Initiate Withdrawl ! , Cfredit limit reached");
         
     }
 
-    @Override
     double balanceEnquiry()
     {
-        return saving_Balance;
+        return Balance;
     }
 
     public void Add_Interest()
     {
-        double Interest = (saving_Balance) * (Interest_Rate / 100);
-        saving_Balance += Interest;
+        double Interest = (Balance) * (Saving_Interest_Rate / 100);
+        Balance += Interest;
     }
 }
 
 class loanAccount extends Account
 {
     private double Principal_amt;
-    private float Interest_Rate1;
-    private int Month;
+    private float Loan_Interest_Rate;
 
-
-    public loanAccount(String name, String Phone, String Email, String Address, String Account_Type)
+    public loanAccount(String name, String Phone, String Email, String Address, String Account_Type, Double Balance, float Loan_Interest_Rate, Double Principal_Amt)
     {
-        super(name, Phone, Email, Address, Account_Type);
+        super(name, Phone, Email, Address, Account_Type, Balance);
+        this.Loan_Interest_Rate = Loan_Interest_Rate;
+        this.Principal_amt = Principal_Amt;
+
     }
 
-    public loanAccount(String Account_Type)
-    {
-        super(Account_Type);
-    }
-
-    @Override
     void deposit(double D) 
     {
         Principal_amt -= D;
         
     }
 
-    @Override
     void withdraw(double W) 
     {
         Principal_amt += W;
         
     }
 
-    @Override
     double balanceEnquiry() 
     {
         return Principal_amt;
@@ -211,7 +157,7 @@ class loanAccount extends Account
 
     public void Interest_Addition()
     {
-        double Interest = (Principal_amt) * (Interest_Rate1);
+        double Interest = (Principal_amt) * (Loan_Interest_Rate);
         Principal_amt += Interest;
     }
 }
