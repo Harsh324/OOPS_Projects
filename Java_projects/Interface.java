@@ -16,6 +16,7 @@ class Interface
         {
             System.out.println("\nif Admin Enter 1\nif Customer Enter 2 : ");
             int Num = sc.nextInt();
+            sc.nextLine();
 
             if(Num == 1)
             {
@@ -24,9 +25,9 @@ class Interface
                 {
                     System.out.println(
                         "\nEnter 1 to open Account\nEnter 2 to get All Account Details\nEnter 3 to Print Customer details\n"
-                        + "Enter 4 to print Transaction Details : "
-                        );
+                        + "Enter 4 to print Transaction Details\nEnter 5 to Exit : ");
                     Num = sc.nextInt();
+                    sc.nextLine();
                     if(Num == 1)
                     {
                         // System.out.println("Enter the Customer details");
@@ -48,10 +49,10 @@ class Interface
                                 Adm.Review_Details();
                                 System.out.println("\nEnter 1 to confirm\nEnter 2 to Enter again");
                                 Val = sc.nextInt();
+                                sc.nextLine();
                             }
                         }
                         Adm.Open_Account();
-
                     }
 
                     
@@ -72,13 +73,39 @@ class Interface
                         System.out.println("\nPrinting Transaction details");
                         Adm.Print_Transaction_Details();
                     }
+                    else if(Num == 5)
+                        break;
                 }
                 
             }
             else if(Num == 2)
             {
                 Customer Cstm = new Customer();
-                
+                Cstm.Load_Customer();
+                Cstm.Load_Account();
+                while(true)
+                {
+                    System.out.println("Enter 1 to Deposit Money\nEnter 2 to Withdraw Money\nEnter 3 to Check Balance\nEnter 4 to print Details : ");
+                    Num = sc.nextInt();
+                    if(Num == 1)
+                    {
+                        Cstm.Deposit_Money();
+                    }
+                    else if(Num == 2)
+                    {
+                        Cstm.Withdraw_Money();
+                    }
+                    else if(Num == 3)
+                    {
+                        Cstm.Check_Balance();
+                    }
+                    else if(Num == 4)
+                    {
+                        Cstm.Check_Details();
+                    }
+                    else if(Num == 5)
+                        break;
+                }
                 
             }
         }
