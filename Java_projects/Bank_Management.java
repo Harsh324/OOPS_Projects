@@ -23,7 +23,33 @@ public class Bank_Management{
     {
 
         String Path = "Java_projects/DataBase/Customers/Details/One.csv";
+        String Path1 = "accounts.csv";
         ArrayList<Object> Result = new ArrayList<>();
+        List<String[]> Lst = new ArrayList<>();
+
+        try (BufferedReader br = new BufferedReader(new FileReader(Path1))) 
+            {
+
+                
+                String line;
+                while ((line = br.readLine()) != null) {
+                    String[] values = line.split(";");
+                    //System.out.println(values[0]);
+                    Lst.add(values);
+                    //Result.add(Arrays.asList(values));
+                    //result.add(values);
+                }
+                //Result.add(result);
+                //System.out.println(result);
+                System.out.println(Lst.get(1)[1]);
+                System.out.println(Lst.get(1)[2]);
+                System.out.println(Lst.get(1)[3]);
+            }
+            // System.out.println(Lst.get(1)[0]);
+            // System.out.println(Lst.get(1)[1]);
+            // System.out.println(Lst.get(1)[2]);
+
+
         /*Result.add("Seed");
         Result.add(5678);
         Result.add("Singh");
@@ -34,9 +60,9 @@ public class Bank_Management{
         out.write(Str);
         out.close();*/
         //String Path = "Java_projects/DataBase/Customers/Transactions/";
-        Path = "Java_projects/DataBase/Customers/" + "2022_AC_1";
+        /*Path = "Java_projects/DataBase/Customers/" + "2022_AC_1";
         File folder = new File(Path);
-        folder.mkdir();
+        folder.mkdir();*/
 
         /*
         File[] listOfFiles = folder.listFiles();
@@ -70,6 +96,14 @@ public class Bank_Management{
                 System.out.println(Iter);
             }
         }*/
+
+
+        // String strMain = "Alpha, Beta, Delta, Gamma, Sigma";
+        // String[] arrSplit = strMain.split(", ");
+        // for (int i=0; i < arrSplit.length; i++)
+        // {
+        //     System.out.println(arrSplit[i]);
+        // }
     }
 }
 
