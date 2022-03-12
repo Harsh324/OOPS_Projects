@@ -53,7 +53,7 @@ class Admin extends Bank
     {
         System.out.println("Please Enter Customer_ID");
         this.Customer_ID = sc.next();
-
+        sc.close();
 
         System.out.println("Select the Account type\nSaving (1)\nChecking (2)\nLoan (3)");
         int Num = sc.nextInt();
@@ -82,14 +82,19 @@ class Admin extends Bank
         
         System.out.println("Enter Customer Name : ");
         this.Name = sc.next();
+        sc.nextLine();
         System.out.println("Enter Customer Phone : ");
         this.Phone = sc.next();
+        sc.nextLine();
         System.out.println("Enter Customer Email : ");
         this.Email = sc.next();
+        sc.nextLine();
         System.out.println("Enter Customer Address : ");
         this.Address = sc.next();
+        sc.nextLine();
         System.out.println("Select the Account type\nSaving (1)\nChecking (2)\nLoan (3)");
         int Num = sc.nextInt();
+        sc.nextLine();
         if(Num == 1)
             this.AccountType = "Saving";
         else if(Num == 2)
@@ -101,7 +106,6 @@ class Admin extends Bank
 
     public void Review_Details()
     {
-        System.out.println("Check the give details once\n");
         System.out.println("Name : " + this.Name);
         System.out.println("Phone : " + this.Phone);
         System.out.println("Email : " + this.Email);
@@ -310,6 +314,44 @@ class Customer extends Bank
 
     public void Check_Balance()
     {
+        if(this.AccountType == "Saving")
+        {
+            System.out.println("Current Balance is : " + SA.balanceEnquiry());
+        }
+        else if(this.AccountType == "Checking")
+        {
+            System.out.println("Current Balance is : " + CA.balanceEnquiry());
+        }
+        else if(this.AccountType == "Loan")
+        {
+            System.out.println("Current Balance is : " + LA.balanceEnquiry());
+        }
+    }
+
+    public void Check_Details()
+    {
+        System.out.println("The Registered details are : ");
+        if(this.AccountType == "Saving")
+        {
+            System.out.println("Name : " + SA.get_Name());
+            System.out.println("Phone : " + SA.get_Phone());
+            System.out.println("Email : " + SA.get_Email());
+            System.out.println("Address : " + SA.get_Address());
+        }
+        else if(this.AccountType == "Checking")
+        {
+            System.out.println("Name : " + CA.get_Name());
+            System.out.println("Phone : " + CA.get_Phone());
+            System.out.println("Email : " + CA.get_Email());
+            System.out.println("Address : " + CA.get_Address());
+        }
+        else if(this.AccountType == "Loan")
+        {
+            System.out.println("Name : " + LA.get_Name());
+            System.out.println("Phone : " + LA.get_Phone());
+            System.out.println("Email : " + LA.get_Email());
+            System.out.println("Address : " + LA.get_Address());
+        }
         
     }
 }
