@@ -155,6 +155,11 @@ class loanAccount extends Account
         return Principal_amt;
     }
 
+    double get_Principal()
+    {
+        return this.Principal_amt;
+    }
+
     public void Interest_Addition()
     {
         double Interest = (Principal_amt) * (Loan_Interest_Rate);
