@@ -14,14 +14,17 @@ class Database
     }
 
 
-    public void Add_Details(Account A) throws FileNotFoundException, IOException
+    public String Add_Details(Account A) throws FileNotFoundException, IOException
     {
+    
         String Detail = "2022_CM_" + this.Customer_Count + ";" + A.get_Name() + ";" + A.get_Phone() + ";" + A.get_Email()
         + ";" + A.get_Address();
 
         String Path1 = "Java_projects/DataBase/Customers/" + "2022_CM_" + this.Customer_Count;
         File folder = new File(Path1);
         folder.mkdir();
+
+        String ID = "2022_CM_" + this.Customer_Count;
 
         String Path2 = Path1 + "/Details";
         String Path3 = Path1 + "/Accounts";
@@ -49,6 +52,7 @@ class Database
 
         System.out.println("Your Customer_ID is : " + "2022_CM_" + this.Customer_Count);
         this.Customer_Count = Integer.toString(Integer.parseInt(this.Customer_Count) + 1);
+        return ID;
     }
 
     public void Add_Account(Account A, String Customer_ID, String Extra) throws IOException
@@ -143,7 +147,7 @@ class Database
     }
 
 
-    public void Add_Transaction(String Trans_Details, String Customer_ID, String Type) throws FileNotFoundException, IOException
+    public void Add_Transaction(Double Var, String Account_ID, String Customer_ID, String Type, String Account_Type) throws FileNotFoundException, IOException
     {
         String Path = "Java_projects/DataBase/Customers/" + Customer_ID + "/Transactions/";
 
@@ -157,12 +161,15 @@ class Database
         BufferedWriter out = new BufferedWriter(new FileWriter(Path, true));
         out.write(Str1);
         out.newLine();
-        out.write(Trans_Details);
+        out.write("2022_TS_" + this.Transaction_Count + ";" + Account_ID  + ";" + Account_Type + ";" + Var);
         out.close();
 
         BufferedWriter out1 = new BufferedWriter(new FileWriter("Java_projects/DataBase/Transactions/Transactions.csv", true));
         out1.newLine();
-        out1.write(Trans_Details);
+        if(Type.equals("Deposit"))
+            out1.write("2022_TS_" + this.Transaction_Count + ";" + Account_ID + ";" + Account_Type + ";" + Var + ";" + "-");
+        else
+            out1.write("2022_TS_" + this.Transaction_Count + ";" + Account_ID + ";" + Account_Type + ";" + "-" + ";"+ Var);
         out1.close();
         
         this.Transaction_Count = Integer.toString(Integer.parseInt(this.Transaction_Count) + 1);
