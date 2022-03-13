@@ -52,7 +52,7 @@ class Bank
 
     public void Input_Account_Type()
     {
-        System.out.println("Select the Account type\nSaving (1)\nChecking (2)\nLoan (3)");
+        System.out.println("\nSelect the Account type\nSaving (1)\nChecking (2)\nLoan (3)");
         int Num = sc.nextInt();
         sc.nextLine();
         if(Num == 1)
@@ -71,7 +71,7 @@ class Admin extends Bank
     
     public boolean Validate() 
     {
-        System.out.println("Enter 1 if new user\nEnter 2 if already user");
+        System.out.println("\nEnter 1 if new user\nEnter 2 if already user");
         int Num = sc.nextInt();
         if(Num == 2)
         {
@@ -88,7 +88,7 @@ class Admin extends Bank
 
     public void Take_Account_Type() throws IOException
     {
-        System.out.println("Please Enter Customer_ID");
+        System.out.println("\nPlease Enter Customer_ID");
         this.Customer_ID = sc.next();
         sc.nextLine();
 
@@ -105,17 +105,17 @@ class Admin extends Bank
     public void Take_Details()
     {
         
-        System.out.println("Enter Customer Name : ");
-        this.Name = sc.next();
+        System.out.println("\nEnter Customer Name : ");
+        this.Name = sc.nextLine();
         sc.nextLine();
-        System.out.println("Enter Customer Phone : ");
-        this.Phone = sc.next();
+        System.out.println("\nEnter Customer Phone : ");
+        this.Phone = sc.nextLine();
         sc.nextLine();
-        System.out.println("Enter Customer Email : ");
-        this.Email = sc.next();
+        System.out.println("\nEnter Customer Email : ");
+        this.Email = sc.nextLine();
         sc.nextLine();
-        System.out.println("Enter Customer Address : ");
-        this.Address = sc.next();
+        System.out.println("\nEnter Customer Address : ");
+        this.Address = sc.nextLine();
         sc.nextLine();
 
         Input_Account_Type();
@@ -141,7 +141,7 @@ class Admin extends Bank
             
             else
             {
-                _Database.Add_Details(SA);
+                this.Customer_ID = _Database.Add_Details(SA);
                 _Database.Add_Account(SA, this.Customer_ID, Add);
             }
             System.out.println("New Saving Account is opened");
@@ -156,7 +156,7 @@ class Admin extends Bank
 
             else
             {
-                _Database.Add_Details(CA);
+                this.Customer_ID =  _Database.Add_Details(CA);
                 _Database.Add_Account(CA, this.Customer_ID, Add);
             }
             System.out.println("New Checking Account is opened");
@@ -172,7 +172,7 @@ class Admin extends Bank
 
             else
             {
-                _Database.Add_Details(LA);
+                this.Customer_ID =  _Database.Add_Details(LA);
                 _Database.Add_Account(LA, this.Customer_ID, Add);
             }
             System.out.println("New loan Account is opened");
@@ -255,14 +255,16 @@ class Customer extends Bank
 
     }
 
-    public void Deposit_Money()
+    public void Deposit_Money() throws FileNotFoundException, IOException
     {
         System.out.println("\nEnter the Amount to Deposit\n");
         Double Var = sc.nextDouble();
+        String Transaction_Details = "";
         if(this.AccountType.equals("Saving"))
         {
             SA.deposit(Var);
             System.out.println("\nCurrent Balance is : " + SA.balanceEnquiry());
+
         }
         else if(this.AccountType.equals("Checking"))
         {
@@ -274,9 +276,10 @@ class Customer extends Bank
             LA.deposit(Var);
             System.out.println("\nCurrent Balance is : " + LA.balanceEnquiry());
         }
+        _Database.Add_Transaction(Var,this.Account_ID, this.Customer_ID, "Deposit", this.AccountType);
     }
 
-    public void Withdraw_Money()
+    public void Withdraw_Money() throws FileNotFoundException, IOException
     {
         System.out.println("\nEnter the Amount to Withdraw\n");
         Double Var = sc.nextDouble();
@@ -296,6 +299,7 @@ class Customer extends Bank
             LA.withdraw(Var);
             System.out.println("\nCurrent Balance is : " + LA.balanceEnquiry());
         }
+        _Database.Add_Transaction(Var,this.Account_ID, this.Customer_ID, "Withdraw", this.AccountType);
     }
 
     public void Check_Balance()
