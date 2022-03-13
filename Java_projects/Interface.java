@@ -87,6 +87,7 @@ class Interface
                 {
                     System.out.println("Enter 1 to Deposit Money\nEnter 2 to Withdraw Money\nEnter 3 to Check Balance\nEnter 4 to print Details : ");
                     Num = sc.nextInt();
+                    sc.nextLine();
                     if(Num == 1)
                     {
                         Cstm.Deposit_Money();
