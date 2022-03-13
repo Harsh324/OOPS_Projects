@@ -3,11 +3,16 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.*;
 
+import javax.lang.model.util.ElementScanner14;
+
 class Bank
 {
+    protected String Name, Phone, Email, Address, AccountType, Customer_ID,  Account_ID;
+
     protected Database _Database = new Database();
 
     protected boolean Flag;
+
     protected float Loan_Interest_Rate = 5.0f;
     protected Double Saving_Interest_Rate = 5.0;
 
@@ -16,14 +21,53 @@ class Bank
     protected SavingAccount SA = null;
     protected CheckingAccount CA = null;
     protected loanAccount LA = null;
+
     Scanner sc = new Scanner(System.in);
+
+    protected List<String[]> Lst = new ArrayList<>();
+
+    public void Print(List<String[]> Lst, String Out)
+    {
+        int Count = 0, Val = 1;
+        String[] S1 = new String[20];
+        for(String[] Str : Lst)
+        {
+            if(Count % 2 == 0)
+            {
+                S1 = Str;
+            }
+            else
+            {
+                System.out.println(Out + " : " + Val);
+                for(int i = 0; i < Str.length; i++)
+                {
+                    System.out.print("\t" + S1[i] + " : " + Str[i]);
+                }
+                System.out.println();
+                Val++;
+            }
+            Count++;  
+        }
+    }
+
+    public void Input_Account_Type()
+    {
+        System.out.println("Select the Account type\nSaving (1)\nChecking (2)\nLoan (3)");
+        int Num = sc.nextInt();
+        sc.nextLine();
+        if(Num == 1)
+            this.AccountType = "Saving";
+        else if(Num == 2)
+            this.AccountType = "Checking";
+        else if(Num== 3)
+            this.AccountType = "Loan";
+    }
 }
 
 
 
 class Admin extends Bank
 {
-    private String Name, Phone, Email, Address, AccountType, Customer_ID;
     
     public boolean Validate() 
     {
@@ -46,28 +90,15 @@ class Admin extends Bank
     {
         System.out.println("Please Enter Customer_ID");
         this.Customer_ID = sc.next();
-        sc.close();
-
-        System.out.println("Select the Account type\nSaving (1)\nChecking (2)\nLoan (3)");
-        int Num = sc.nextInt();
         sc.nextLine();
-        if(Num == 1)
-            this.AccountType = "Saving";
-        else if(Num == 2)
-            this.AccountType = "Checking";
-        else if(Num== 3)
-            this.AccountType = "Loan";
 
-        List<String[]> Lst = new ArrayList<>();
-
+        Input_Account_Type();
         Lst = _Database.Return_Details(this.Customer_ID);
 
         this.Name = Lst.get(1)[1];
         this.Phone = Lst.get(1)[2];
         this.Email = Lst.get(1)[3];
         this.Address = Lst.get(1)[4];
-
-        
     }
 
 
@@ -86,16 +117,8 @@ class Admin extends Bank
         System.out.println("Enter Customer Address : ");
         this.Address = sc.next();
         sc.nextLine();
-        System.out.println("Select the Account type\nSaving (1)\nChecking (2)\nLoan (3)");
-        int Num = sc.nextInt();
-        sc.nextLine();
-        if(Num == 1)
-            this.AccountType = "Saving";
-        else if(Num == 2)
-            this.AccountType = "Checking";
-        else if(Num== 3)
-            this.AccountType = "Loan";
-        
+
+        Input_Account_Type();
     }
 
     public void Review_Details()
@@ -114,12 +137,12 @@ class Admin extends Bank
             SA = new SavingAccount(this.Name, this.Phone, this.Email, this.Address, this.AccountType, 0.0, Saving_Interest_Rate);
             String Add = Double.toString(Saving_Interest_Rate);
             if(Flag)
-                _Database.Add_Account(SA, Add);
+                _Database.Add_Account(SA, this.Customer_ID, Add);
             
             else
             {
                 _Database.Add_Details(SA);
-                _Database.Add_Account(SA, Add);
+                _Database.Add_Account(SA, this.Customer_ID, Add);
             }
             System.out.println("New Saving Account is opened");
         }
@@ -129,12 +152,12 @@ class Admin extends Bank
             CA = new CheckingAccount(this.Name, this.Phone, this.Email, this.Address, this.AccountType, 0.0, CreditLimit);
             String Add = Double.toString(CreditLimit);
             if(Flag)
-                _Database.Add_Account(CA, Add);
+                _Database.Add_Account(CA, this.Customer_ID, Add);
 
             else
             {
                 _Database.Add_Details(CA);
-                _Database.Add_Account(CA, Add);
+                _Database.Add_Account(CA, this.Customer_ID, Add);
             }
             System.out.println("New Checking Account is opened");
         }
@@ -145,12 +168,12 @@ class Admin extends Bank
             LA = new loanAccount(this.Name, this.Phone, this.Email, this.Address, this.AccountType, 0.0, Loan_Interest_Rate, 5000.0);
             String Add = Double.toString(LA.get_Principal()) + Double.toString(Loan_Interest_Rate);
             if(Flag)
-                _Database.Add_Account(LA, Add);
+                _Database.Add_Account(LA, this.Customer_ID, Add);
 
             else
             {
                 _Database.Add_Details(LA);
-                _Database.Add_Account(LA, Add);
+                _Database.Add_Account(LA, this.Customer_ID, Add);
             }
             System.out.println("New loan Account is opened");
         }
@@ -162,41 +185,27 @@ class Admin extends Bank
         System.out.println("Enter Customer ID");
         String Customer_ID = sc.next();
         sc.nextLine();
-
-        List<Object> Lst = new ArrayList<>();
         Lst = _Database.Get_Transactions(Customer_ID);
         System.out.println("Printing Few Transactions");
-        for(Object Ls : Lst)
-        {
-            System.out.println(Ls);
-        }
+        Print(Lst, "Transaction");
     }
 
     public void Print_Customer_Details() throws IOException
     {
         System.out.println("Enter Customer ID");
         String Customer_ID = sc.next();
-
-        List<Object> Lst = new ArrayList<>();
-
         Lst = _Database.Return_Details(Customer_ID);
-        System.out.println("Printing the customer details");
-
-        System.out.println(Lst);
-
+        System.out.println("\nPrinting the customer details\n");
+        Print(Lst, "Customer");
     }
 
     public void Print_Account_Details() throws FileNotFoundException, IOException
     {
         System.out.println("Enter Customer ID");
         String Customer_ID = sc.next();
-        List<Object> Lst = new ArrayList<>();
-
         Lst = _Database.Return_Accounts(Customer_ID);
-
-        System.out.println("Printing all accounts details");
-
-        System.out.println(Lst);
+        System.out.println("\nPrinting all accounts details\n");
+        Print(Lst, "Account");
     }
 }
 
@@ -206,16 +215,12 @@ class Admin extends Bank
 
 class Customer extends Bank
 {
-    private String Name, Phone, Email, Address, AccountType, Customer_ID, Account_ID;
     private Double Balance, Principal_Amount;
 
     public void Load_Customer()
     {
         System.out.println("Please Enter the Customer_ID");
         this.Customer_ID = sc.nextLine();
-
-        List<String[]> Lst = new ArrayList<>();
-
         Lst = _Database.Return_Details(this.Customer_ID);
 
         this.Name = Lst.get(1)[1];
@@ -228,29 +233,31 @@ class Customer extends Bank
     {
         System.out.println("Please Enter the Account ID");
         this.Account_ID = sc.nextLine();
-
-        List<String[]> Lst = new ArrayList<>();
-
         Lst = _Database.Return_Account(this.Customer_ID, this.Account_ID);
 
+        Print(Lst, "Account");
+
         this.AccountType = Lst.get(1)[1];
-        if(this.AccountType == "Saving")
+        System.out.println(this.AccountType);
+        System.out.println(this.AccountType.length());
+        this.Balance = Double.parseDouble(Lst.get(1)[3]);
+
+        if(this.AccountType.equals("Saving"))
         {
-            this.Balance = Double.parseDouble(Lst.get(1)[3]);;
+            System.out.println("In Load Account");
             SA = new SavingAccount(this.Name, this.Phone, this.Email, this.Address, this.AccountType, this.Balance, Saving_Interest_Rate);
         }
         else if(this.AccountType == "Checking")
         {
-            this.Balance = Double.parseDouble(Lst.get(1)[3]);
             CA = new CheckingAccount(this.Name, this.Phone, this.Email, this.Address, this.AccountType, this.Balance, CreditLimit);
         }
         else if(this.AccountType == "Loan")
         {
-            this.Balance = Double.parseDouble(Lst.get(1)[3]);
             this.Principal_Amount = Double.parseDouble(Lst.get(1)[4]);
             LA = new loanAccount(this.Name, this.Phone, this.Email, this.Address, this.AccountType, this.Balance, Loan_Interest_Rate, this.Principal_Amount);
         }
-
+        else
+            System.out.println("No match");
 
     }
 
@@ -299,17 +306,18 @@ class Customer extends Bank
 
     public void Check_Balance()
     {
+        System.out.println("Yes there in");
         if(this.AccountType == "Saving")
         {
-            System.out.println("Current Balance is : " + SA.balanceEnquiry());
+            System.out.println("\nCurrent Balance is : " + SA.balanceEnquiry());
         }
         else if(this.AccountType == "Checking")
         {
-            System.out.println("Current Balance is : " + CA.balanceEnquiry());
+            System.out.println("\nCurrent Balance is : " + CA.balanceEnquiry());
         }
         else if(this.AccountType == "Loan")
         {
-            System.out.println("Current Balance is : " + LA.balanceEnquiry());
+            System.out.println("\nCurrent Balance is : " + LA.balanceEnquiry());
         }
     }
 
