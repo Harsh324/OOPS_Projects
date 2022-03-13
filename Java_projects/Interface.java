@@ -85,7 +85,8 @@ class Interface
                 Cstm.Load_Account();
                 while(true)
                 {
-                    System.out.println("Enter 1 to Deposit Money\nEnter 2 to Withdraw Money\nEnter 3 to Check Balance\nEnter 4 to print Details : ");
+                    System.out.println("\nEnter 1 to Deposit Money\nEnter 2 to Withdraw Money\n"
+                    + "Enter 3 to Check Balance\nEnter 4 to print Details\nEnter 5 to break : ");
                     Num = sc.nextInt();
                     sc.nextLine();
                     if(Num == 1)
@@ -105,7 +106,10 @@ class Interface
                         Cstm.Check_Details();
                     }
                     else if(Num == 5)
+                    {
+                        Cstm.Load_to_Database();
                         break;
+                    }
                 }
                 
             }

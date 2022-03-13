@@ -132,7 +132,7 @@ class Admin extends Bank
 
     public void Open_Account() throws IOException
     {
-        if(this.AccountType == "Saving")
+        if(this.AccountType.equals("Saving"))
         {
             SA = new SavingAccount(this.Name, this.Phone, this.Email, this.Address, this.AccountType, 0.0, Saving_Interest_Rate);
             String Add = Double.toString(Saving_Interest_Rate);
@@ -147,7 +147,7 @@ class Admin extends Bank
             System.out.println("New Saving Account is opened");
         }
 
-        else if(this.AccountType == "Checking")
+        else if(this.AccountType.equals("Checking"))
         {
             CA = new CheckingAccount(this.Name, this.Phone, this.Email, this.Address, this.AccountType, 0.0, CreditLimit);
             String Add = Double.toString(CreditLimit);
@@ -163,10 +163,10 @@ class Admin extends Bank
         }
 
         
-        else if(this.AccountType == "Loan")
+        else if(this.AccountType.equals("Loan"))
         {
             LA = new loanAccount(this.Name, this.Phone, this.Email, this.Address, this.AccountType, 0.0, Loan_Interest_Rate, 5000.0);
-            String Add = Double.toString(LA.get_Principal()) + Double.toString(Loan_Interest_Rate);
+            String Add = Double.toString(LA.get_Principal()) + ";" + Double.toString(Loan_Interest_Rate);
             if(Flag)
                 _Database.Add_Account(LA, this.Customer_ID, Add);
 
@@ -219,7 +219,7 @@ class Customer extends Bank
 
     public void Load_Customer()
     {
-        System.out.println("Please Enter the Customer_ID");
+        System.out.println("\nPlease Enter the Customer_ID\n");
         this.Customer_ID = sc.nextLine();
         Lst = _Database.Return_Details(this.Customer_ID);
 
@@ -231,27 +231,21 @@ class Customer extends Bank
 
     public void Load_Account()
     {
-        System.out.println("Please Enter the Account ID");
+        System.out.println("\nPlease Enter the Account ID\n");
         this.Account_ID = sc.nextLine();
         Lst = _Database.Return_Account(this.Customer_ID, this.Account_ID);
-
-        Print(Lst, "Account");
-
         this.AccountType = Lst.get(1)[1];
-        System.out.println(this.AccountType);
-        System.out.println(this.AccountType.length());
-        this.Balance = Double.parseDouble(Lst.get(1)[3]);
+        this.Balance = Double.parseDouble(Lst.get(1)[2]);
 
         if(this.AccountType.equals("Saving"))
         {
-            System.out.println("In Load Account");
             SA = new SavingAccount(this.Name, this.Phone, this.Email, this.Address, this.AccountType, this.Balance, Saving_Interest_Rate);
         }
-        else if(this.AccountType == "Checking")
+        else if(this.AccountType.equals("Checking"))
         {
             CA = new CheckingAccount(this.Name, this.Phone, this.Email, this.Address, this.AccountType, this.Balance, CreditLimit);
         }
-        else if(this.AccountType == "Loan")
+        else if(this.AccountType.equals("Loan"))
         {
             this.Principal_Amount = Double.parseDouble(Lst.get(1)[4]);
             LA = new loanAccount(this.Name, this.Phone, this.Email, this.Address, this.AccountType, this.Balance, Loan_Interest_Rate, this.Principal_Amount);
@@ -263,59 +257,59 @@ class Customer extends Bank
 
     public void Deposit_Money()
     {
-        System.out.println("Enter the Amount to Deposit");
+        System.out.println("\nEnter the Amount to Deposit\n");
         Double Var = sc.nextDouble();
-        if(this.AccountType == "Saving")
+        if(this.AccountType.equals("Saving"))
         {
             SA.deposit(Var);
-            System.out.println("Current Balance is : " + SA.balanceEnquiry());
+            System.out.println("\nCurrent Balance is : " + SA.balanceEnquiry());
         }
-        else if(this.AccountType == "Checking")
+        else if(this.AccountType.equals("Checking"))
         {
             CA.deposit(Var);
-            System.out.println("Current Balance is : " + CA.balanceEnquiry());
+            System.out.println("\nCurrent Balance is : " + CA.balanceEnquiry());
         }
-        else if(this.AccountType == "Loan")
+        else if(this.AccountType.equals("Loan"))
         {
             LA.deposit(Var);
-            System.out.println("Current Balance is : " + LA.balanceEnquiry());
+            System.out.println("\nCurrent Balance is : " + LA.balanceEnquiry());
         }
     }
 
     public void Withdraw_Money()
     {
-        System.out.println("Enter the Amount to Withdraw");
+        System.out.println("\nEnter the Amount to Withdraw\n");
         Double Var = sc.nextDouble();
 
-        if(this.AccountType == "Saving")
+        if(this.AccountType.equals("Saving"))
         {
             SA.withdraw(Var);;
-            System.out.println("Current Balance is : " + SA.balanceEnquiry());
+            System.out.println("\nCurrent Balance is : " + SA.balanceEnquiry());
         }
-        else if(this.AccountType == "Checking")
+        else if(this.AccountType.equals("Checking"))
         {
             CA.withdraw(Var);
-            System.out.println("Current Balance is : " + CA.balanceEnquiry());
+            System.out.println("\nCurrent Balance is : " + CA.balanceEnquiry());
         }
-        else if(this.AccountType == "Loan")
+        else if(this.AccountType.equals("Loan"))
         {
             LA.withdraw(Var);
-            System.out.println("Current Balance is : " + LA.balanceEnquiry());
+            System.out.println("\nCurrent Balance is : " + LA.balanceEnquiry());
         }
     }
 
     public void Check_Balance()
     {
-        System.out.println("Yes there in");
-        if(this.AccountType == "Saving")
+        //System.out.println("Yes there in");
+        if(this.AccountType.equals("Saving"))
         {
             System.out.println("\nCurrent Balance is : " + SA.balanceEnquiry());
         }
-        else if(this.AccountType == "Checking")
+        else if(this.AccountType.equals("Checking"))
         {
             System.out.println("\nCurrent Balance is : " + CA.balanceEnquiry());
         }
-        else if(this.AccountType == "Loan")
+        else if(this.AccountType.equals("Loan"))
         {
             System.out.println("\nCurrent Balance is : " + LA.balanceEnquiry());
         }
@@ -323,28 +317,41 @@ class Customer extends Bank
 
     public void Check_Details()
     {
-        System.out.println("The Registered details are : ");
-        if(this.AccountType == "Saving")
+        System.out.println("\nThe Registered details are : \n");
+        Account Acc = null;
+        if(this.AccountType.equals("Saving"))
+            Acc = SA;
+
+        else if(this.AccountType.equals("Checking"))
+            Acc = CA;
+
+        else if(this.AccountType.equals("Loan"))
+            Acc = LA;
+
+        System.out.println("Name : " + Acc.get_Name());
+        System.out.println("Phone : " + Acc.get_Phone());
+        System.out.println("Email : " + Acc.get_Email());
+        System.out.println("Address : " + Acc.get_Address());
+    }
+
+    public void Load_to_Database() throws IOException
+    {
+        String Add = "";
+        if(this.AccountType.equals("Saving"))
         {
-            System.out.println("Name : " + SA.get_Name());
-            System.out.println("Phone : " + SA.get_Phone());
-            System.out.println("Email : " + SA.get_Email());
-            System.out.println("Address : " + SA.get_Address());
+            Add = Double.toString(Saving_Interest_Rate);
+            _Database.Account_to_Database(SA, this.Customer_ID, this.Account_ID, Add);
         }
-        else if(this.AccountType == "Checking")
+        else if(this.AccountType.equals("Checking"))
         {
-            System.out.println("Name : " + CA.get_Name());
-            System.out.println("Phone : " + CA.get_Phone());
-            System.out.println("Email : " + CA.get_Email());
-            System.out.println("Address : " + CA.get_Address());
+            Add = Double.toString(CreditLimit);
+            _Database.Account_to_Database(CA, this.Customer_ID, this.Account_ID,  Add);
         }
-        else if(this.AccountType == "Loan")
+        else if(this.AccountType.equals("Loan"))
         {
-            System.out.println("Name : " + LA.get_Name());
-            System.out.println("Phone : " + LA.get_Phone());
-            System.out.println("Email : " + LA.get_Email());
-            System.out.println("Address : " + LA.get_Address());
+            Add = Double.toString(LA.get_Principal()) + ";" + Double.toString(Loan_Interest_Rate);
+            _Database.Account_to_Database(LA, this.Customer_ID, this.Account_ID,  Add);
         }
-        
+
     }
 }

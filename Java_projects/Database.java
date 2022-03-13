@@ -46,6 +46,8 @@ class Database
         out.write(Detail);
         out.newLine();
         out.close();
+
+        System.out.println("Your Customer_ID is : " + "2022_CM_" + this.Customer_Count);
         this.Customer_Count = Integer.toString(Integer.parseInt(this.Customer_Count) + 1);
     }
 
@@ -100,14 +102,48 @@ class Database
             out1.close();
         }
 
-        out.close();;
+        out.close();
+        System.out.println("Your Account_ID is : " + "2022_AC_" + this.Account_Count);
 
         this.Account_Count = Integer.toString(Integer.parseInt(this.Account_Count) + 1);
         
     }
 
+    public void Account_to_Database(Account A, String Customer_ID, String Account_ID , String Extra) throws IOException
+    {
+        System.out.println(Customer_ID + " ; " + Account_ID);
+        String Path = "Java_projects/DataBase/Customers/" + Customer_ID + "/Accounts/";
+        Path = Path + Account_ID + ".csv";
 
-    public void Add_Transaction(String Trans_Details, String Customer_ID) throws FileNotFoundException, IOException
+
+        BufferedWriter out = new BufferedWriter(new FileWriter(Path));
+
+        if(A.get_AccountType().equals("Saving"))
+        {
+            out.write("Account_ID;Account_Type;Balance;Interest_Rate");
+            out.newLine();
+            out.write(Account_ID + ";" + A.get_AccountType() + ";" + A.balanceEnquiry() + ";" + Extra);
+        }
+
+        else if(A.get_AccountType().equals("Checking"))
+        {
+            out.write("Account_ID;Account_Type;Balance;Principal_Amt;Interest_Rate");
+            out.newLine();
+            out.write(Account_ID + ";" + A.get_AccountType() + ";" + A.balanceEnquiry() + ";" + Extra);
+        }
+        
+        else if(A.get_AccountType().equals("Loan"))
+        {
+            out.write("Account_ID;Account_Type;Balance;Credit_Limit");
+            out.newLine();
+            out.write(Account_ID + ";" + A.get_AccountType() + ";" + A.balanceEnquiry() + ";" + Extra);
+        }
+
+        out.close();;
+    }
+
+
+    public void Add_Transaction(String Trans_Details, String Customer_ID, String Type) throws FileNotFoundException, IOException
     {
         String Path = "Java_projects/DataBase/Customers/" + Customer_ID + "/Transactions/";
 
@@ -116,7 +152,7 @@ class Database
         File file = new File(Path);
         file.createNewFile();
 
-        String Str1 = "Some Transaction details";
+        String Str1 = "Transaction_ID"+ ";" + "Account_ID" + ";" + "Account_Type" + ";" + Type;
 
         BufferedWriter out = new BufferedWriter(new FileWriter(Path, true));
         out.write(Str1);
@@ -124,6 +160,11 @@ class Database
         out.write(Trans_Details);
         out.close();
 
+        BufferedWriter out1 = new BufferedWriter(new FileWriter("Java_projects/DataBase/Transactions/Transactions.csv", true));
+        out1.newLine();
+        out1.write(Trans_Details);
+        out1.close();
+        
         this.Transaction_Count = Integer.toString(Integer.parseInt(this.Transaction_Count) + 1);
 
     }
