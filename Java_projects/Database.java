@@ -46,11 +46,12 @@ class Database
         out.write(Detail);
         out.newLine();
         out.close();
+        this.Customer_Count = Integer.toString(Integer.parseInt(this.Customer_Count) + 1);
     }
 
-    public void Add_Account(Account A, String Extra) throws IOException
+    public void Add_Account(Account A, String Customer_ID, String Extra) throws IOException
     {
-        String Path = "Java_projects/DataBase/Customers/" + "2022_CM_" + this.Customer_Count+ "/Accounts/";
+        String Path = "Java_projects/DataBase/Customers/" + Customer_ID + "/Accounts/";
         
         
         Path = Path + "2022_AC_" + this.Account_Count + ".csv";
@@ -101,7 +102,6 @@ class Database
 
         out.close();;
 
-        this.Customer_Count = Integer.toString(Integer.parseInt(this.Customer_Count) + 1);
         this.Account_Count = Integer.toString(Integer.parseInt(this.Account_Count) + 1);
         
     }
@@ -144,16 +144,11 @@ class Database
         List<String[]> Counts = new ArrayList<>();
         String Path = "Java_projects/DataBase/Metadata/metadata.csv";
         try (BufferedReader br = new BufferedReader(new FileReader(Path))) {
-
-            
             String line;
             while ((line = br.readLine()) != null) {
                 String[] values = line.split(";");
                 Counts.add(values);
-                //result.add(Arrays.asList(values));
             }
-            //return result;
-            //System.out.println(result);
         }
         catch(Exception e)
         {
