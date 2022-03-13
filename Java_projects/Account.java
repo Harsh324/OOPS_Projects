@@ -109,7 +109,7 @@ class SavingAccount extends Account
             Balance -= W;
         }
         else
-            System.out.println("Can't Initiate Withdrawl ! , Cfredit limit reached");
+            System.out.println("Can't Initiate Withdrawl ! , Not Sufficient Balance");
         
     }
 
