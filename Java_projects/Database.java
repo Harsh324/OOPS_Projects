@@ -206,6 +206,7 @@ class Database
         this.Customer_Count = Counts.get(1)[0];
         this.Account_Count = Counts.get(1)[1];
         this.Transaction_Count = Counts.get(1)[2];
+        System.out.println(this.Transaction_Count);
         
     }
 
