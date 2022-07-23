@@ -1,7 +1,0 @@
-Transaction_ID;Account_ID;Account_Type;Deposit;Withdrawl
-2022_TS_0;2022_AC_0;Saving;3000.0;-
-2022_TS_1;2022_AC_0;Saving;-;500.0
-2022_TS_2;2022_AC_0;Saving;-;3000.0
-2022_TS_0;2022_AC_1;Saving;10000.0;-
-2022_TS_1;2022_AC_1;Saving;-;1000.0
-2022_TS_2;2022_AC_1;Saving;-;10000.0
